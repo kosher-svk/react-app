@@ -1,4 +1,4 @@
-function TableFooter(props: any) {
+function StandingOrderTableFooter(props: any) {
   return (
     <tr>
       <th colSpan={4}>Table footer (C3) better</th>
@@ -6,4 +6,4 @@ function TableFooter(props: any) {
   );
 }
 
-export default TableFooter;
+export default StandingOrderTableFooter;

@@ -1,6 +1,4 @@
-import RowOptions from './RowOptions';
-
-function TableRow(props: any) {
+function StandingOrderRow(props: any) {
   const { name = 'name', iban, amount, date = 'date' } = props;
   return (
     <tr>
@@ -19,11 +17,14 @@ function TableRow(props: any) {
         </table>
       </td>
       <td>
-        <RowOptions />
+        <>
+          <button>Update</button>
+          <button>Delete</button>
+        </>
       </td>
       <td>{amount || 'amount'}</td>
     </tr>
   );
 }
 
-export default TableRow;
+export default StandingOrderRow;

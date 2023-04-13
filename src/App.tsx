@@ -1,14 +1,12 @@
-import Navbar from './navbarComponent/Navbar';
-import Table from './tableComponent/Table';
+import Navbar from './navbar/Navbar';
+import StandingOrderTable from './standingOrderTable/StandingOrderTable';
 
 function App() {
   return (
-    <>
-      <div>
-        <Navbar />
-        <Table />
-      </div>
-    </>
+    <div>
+      <Navbar />
+      <StandingOrderTable />
+    </div>
   );
 }
 

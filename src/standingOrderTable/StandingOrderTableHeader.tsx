@@ -1,4 +1,4 @@
-function TableHeader(props: any) {
+function StandingOrderTableHeader(props: any) {
   return (
     <thead>
       <tr>
@@ -8,4 +8,4 @@ function TableHeader(props: any) {
   );
 }
 
-export default TableHeader;
+export default StandingOrderTableHeader;
