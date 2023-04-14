@@ -1,18 +1,14 @@
+import { StandingOrder } from './standingOrderInterface';
 import StandingOrderRow from './standingOrderRow/StandingOrderRow';
 
-function StandingOrderTableList(props: any) {
+function StandingOrderTableList(props: { transactions: StandingOrder[] }) {
   const { transactions } = props;
   console.log(transactions);
 
   return (
     <tbody>
-      {transactions.map((transaction: { standingOrderId: number }) => {
-        return (
-          <StandingOrderRow
-            {...transaction}
-            key={transaction.standingOrderId}
-          />
-        );
+      {transactions.map((transaction) => {
+        return <StandingOrderRow {...transaction} key={transaction.id} />;
       })}
     </tbody>
   );
