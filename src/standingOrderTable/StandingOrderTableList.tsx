@@ -6,8 +6,13 @@ function StandingOrderTableList(props: any) {
 
   return (
     <tbody>
-      {transactions.map((transaction: { id: number }) => {
-        return <StandingOrderRow {...transaction} key={transaction.id} />;
+      {transactions.map((transaction: { standingOrderId: number }) => {
+        return (
+          <StandingOrderRow
+            {...transaction}
+            key={transaction.standingOrderId}
+          />
+        );
       })}
     </tbody>
   );

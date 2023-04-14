@@ -1,17 +1,23 @@
 function StandingOrderRow(props: any) {
-  const { name = 'name', iban, amount, date = 'date' } = props;
+  const {
+    name = 'name',
+    accountNumber = 'account number',
+    interval = 'interval',
+    amount = 'amount',
+    nextRealizationDate = 'date',
+  } = props;
   return (
     <tr>
-      <td>{date || 'date'}</td>
+      <td>{nextRealizationDate}</td>
       <td>
         <table>
           <tbody>
             <tr>
-              <td>{name || 'name'} </td>
+              <td>{name} </td>
             </tr>
             <tr>
-              <td>Tyzdenne</td>
-              <td>{iban || 'iban'}</td>
+              <td>{interval}</td>
+              <td>{accountNumber}</td>
             </tr>
           </tbody>
         </table>
