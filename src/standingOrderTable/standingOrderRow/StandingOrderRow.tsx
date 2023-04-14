@@ -1,4 +1,7 @@
-function StandingOrderRow(props: any) {
+import { StandingOrder } from '../standingOrderInterface';
+import AccountNumber from './AccountNumber';
+
+function StandingOrderRow(props: StandingOrder) {
   const {
     name = 'name',
     accountNumber = 'account number',
@@ -17,7 +20,7 @@ function StandingOrderRow(props: any) {
             </tr>
             <tr>
               <td>{interval}</td>
-              <td>{accountNumber}</td>
+              <AccountNumber accountNumber={accountNumber} />
             </tr>
           </tbody>
         </table>
