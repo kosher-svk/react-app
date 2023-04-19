@@ -28,10 +28,10 @@ function StandingOrderTable() {
       <table className='table'>
         <StandingOrderTableHeader />
 
-        <StandingOrderTableList transactions={data} />
+        <StandingOrderTableList standingOrderList={data} />
 
         <tfoot>
-          <StandingOrderTableFooter transactions={data} />
+          <StandingOrderTableFooter standingOrderList={data} />
         </tfoot>
       </table>
     </div>
