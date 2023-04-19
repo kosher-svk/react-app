@@ -6,9 +6,17 @@ function StandingOrderRow(props: StandingOrder) {
     name = 'name',
     accountNumber = 'account number',
     interval = 'interval',
-    amount = 'amount',
+    amount = 0,
     nextRealizationDate = 'date',
   } = props;
+
+  let euro = Intl.NumberFormat('en-DE', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 3,
+    currencySign: 'accounting',
+    useGrouping: false,
+  });
   return (
     <tr>
       <td>{nextRealizationDate}</td>
@@ -31,7 +39,7 @@ function StandingOrderRow(props: StandingOrder) {
           <button>Delete</button>
         </>
       </td>
-      <td>{amount || 'amount'}</td>
+      <td>{euro.format(amount)}</td>
     </tr>
   );
 }
