@@ -1,18 +1,19 @@
+import { TableBody } from '@mui/material';
 import { StandingOrder } from './standingOrderInterface';
 import StandingOrderRow from './standingOrderRow/StandingOrderRow';
 
-function StandingOrderTableList({
+const StandingOrderTableList = ({
   standingOrderList,
 }: {
   standingOrderList: StandingOrder[];
-}) {
+}) => {
   return (
-    <tbody>
+    <TableBody>
       {standingOrderList.map((transaction) => {
         return <StandingOrderRow {...transaction} key={transaction.id} />;
       })}
-    </tbody>
+    </TableBody>
   );
-}
+};
 
 export default StandingOrderTableList;

@@ -1,7 +1,19 @@
 import { StandingOrder } from '../standingOrderInterface';
 import AccountNumber from './AccountNumber';
+import Button from '@mui/material/Button';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import { Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import Interval from './Interval';
 
-function StandingOrderRow(props: StandingOrder) {
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
+const StandingOrderRow = (props: StandingOrder) => {
   const {
     name = 'name',
     accountNumber = 'account number',
@@ -18,30 +30,34 @@ function StandingOrderRow(props: StandingOrder) {
     useGrouping: false,
   });
   return (
-    <tr>
-      <td>{nextRealizationDate}</td>
-      <td>
-        <table>
-          <tbody>
-            <tr>
-              <td>{name} </td>
-            </tr>
-            <tr>
-              <td>{interval}</td>
-              <AccountNumber accountNumber={accountNumber} />
-            </tr>
-          </tbody>
-        </table>
-      </td>
-      <td>
-        <>
-          <button>Update</button>
-          <button>Delete</button>
-        </>
-      </td>
-      <td>{euro.format(amount)}</td>
-    </tr>
+    <StyledTableRow>
+      <TableCell>{nextRealizationDate}</TableCell>
+      <TableCell>
+        <Grid container spacing={1}>
+          <Grid item xs={8}>
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                {name}
+              </Grid>
+              <Grid item xs={4}>
+                <Interval interval={interval} />
+              </Grid>
+              <Grid item xs={8}>
+                <AccountNumber accountNumber={accountNumber} />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={4}>
+            <Button variant='outlined'>Update</Button>
+            <Button variant='outlined' color='error'>
+              Delete
+            </Button>
+          </Grid>
+        </Grid>
+      </TableCell>
+      <TableCell>{euro.format(amount)}</TableCell>
+    </StyledTableRow>
   );
-}
+};
 
 export default StandingOrderRow;
