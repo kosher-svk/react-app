@@ -5,10 +5,12 @@ import StandingOrderTableList from './StandingOrderTableList';
 import { StandingOrder } from './standingOrderInterface';
 import axios from 'axios';
 
+import Table from '@mui/material/Table';
+
 const url =
   'http://cvicna-uloha-vzor-api-edge.akademia.apps.oshift4.softec.sk/api/standingOrder';
 
-function StandingOrderTable() {
+const StandingOrderTable = () => {
   const [data, setData] = useState<StandingOrder[]>([]);
 
   const fetchData = async () => {
@@ -25,17 +27,13 @@ function StandingOrderTable() {
 
   return (
     <div>
-      <table className='table'>
+      <Table className='table'>
         <StandingOrderTableHeader />
-
         <StandingOrderTableList standingOrderList={data} />
-
-        <tfoot>
-          <StandingOrderTableFooter standingOrderList={data} />
-        </tfoot>
-      </table>
+        <StandingOrderTableFooter standingOrderList={data} />
+      </Table>
     </div>
   );
-}
+};
 
 export default StandingOrderTable;

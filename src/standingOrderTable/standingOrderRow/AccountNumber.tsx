@@ -1,8 +1,8 @@
-function AccountNumber(props: { accountNumber: string }) {
-  return <td>{ibanSeparator(props.accountNumber)}</td>;
-}
+const AccountNumber = (props: { accountNumber: string }) => {
+  return <span>{ibanSeparator(props.accountNumber)}</span>;
+};
 
-function ibanSeparator(iban: string) {
+const ibanSeparator = (iban: string) => {
   if (!iban) {
     return 'AccountNumber';
   }
@@ -19,6 +19,6 @@ function ibanSeparator(iban: string) {
     }
   }
   return newIban;
-}
+};
 
 export default AccountNumber;

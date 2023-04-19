@@ -1,9 +1,12 @@
 import { useMemo } from 'react';
 import { StandingOrder } from './standingOrderInterface';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import { TableFooter } from '@mui/material';
 
-function StandingOrderTableFooter(props: {
+const StandingOrderTableFooter = (props: {
   standingOrderList: StandingOrder[];
-}) {
+}) => {
   const { standingOrderList } = props;
   const numberOfStandingOrders = standingOrderList.length;
 
@@ -23,11 +26,13 @@ function StandingOrderTableFooter(props: {
   }, [standingOrderList]);
 
   return (
-    <tr>
-      <td>Pocet trvalych prikazov: {numberOfStandingOrders}</td>
-      <td>Celkova suma: {totalMoney}</td>
-    </tr>
+    <TableFooter>
+      <TableRow>
+        <TableCell>Pocet trvalych prikazov: {numberOfStandingOrders}</TableCell>
+        <TableCell colSpan={2}>Celkova suma: {totalMoney}</TableCell>
+      </TableRow>
+    </TableFooter>
   );
-}
+};
 
 export default StandingOrderTableFooter;
