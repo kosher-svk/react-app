@@ -3,6 +3,7 @@ import { StandingOrder } from './standingOrderInterface';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { TableFooter } from '@mui/material';
+import CurrencyFormatter from '../utils/CurrencyFormatter';
 
 const StandingOrderTableFooter = (props: {
   standingOrderList: StandingOrder[];
@@ -12,17 +13,14 @@ const StandingOrderTableFooter = (props: {
 
   const totalMoney = useMemo(() => {
     const totalAmount = standingOrderList.reduce(
-      (totalAmount, StandingOrder) => {
-        return totalAmount + StandingOrder.amount;
+      (totalAmount, standingOrder) => {
+        if (standingOrder.amount) return totalAmount + standingOrder.amount;
+        else return totalAmount;
       },
       0
     );
-    let euro = Intl.NumberFormat('en-DE', {
-      style: 'currency',
-      currency: 'EUR',
-      useGrouping: false,
-    });
-    return euro.format(totalAmount);
+
+    return CurrencyFormatter(totalAmount);
   }, [standingOrderList]);
 
   return (
