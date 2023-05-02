@@ -3,13 +3,20 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-const StandingOrderTableHeader = () => {
+const StandingOrderTableHeader = ({
+  handleClickOpen,
+}: {
+  handleClickOpen: (id: number) => void;
+}) => {
   return (
     <TableHead>
       <TableRow>
         <TableCell colSpan={3}>
-          <Button variant='contained'>Nový trvalý príkaz</Button>
+          <Button variant='contained' onClick={() => handleClickOpen(0)}>
+            Nový trvalý príkaz
+          </Button>
         </TableCell>
+        <TableCell colSpan={3}></TableCell>
       </TableRow>
     </TableHead>
   );
