@@ -4,27 +4,28 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Grid } from '@mui/material';
-import { StandingOrder } from './standingOrderInterface';
+import { Grid, MenuItem, Select } from '@mui/material';
+import { StandingOrder } from '../../interfaces/standingOrderInterface';
 
 import validationSchema from './validationSchema';
 import { Formik, Form } from 'formik';
 import { DatePicker } from '@mui/x-date-pickers';
 import moment from 'moment';
+import IntervalDropdown from './IntervalDropdown';
 
 export default function FormDialog({
   openDialog,
   formData,
   handleClose,
   handleFormSubmit,
+  handleOpenSymbolDialog,
 }: {
   openDialog: boolean;
   formData: StandingOrder;
   handleClose: Function;
   handleFormSubmit: (formData: StandingOrder) => void;
+  handleOpenSymbolDialog: () => void;
 }) {
-  console.log('formData from Dialog', formData);
-
   return (
     <Dialog open={openDialog} onClose={() => handleClose()} fullScreen={true}>
       <DialogTitle>Trvalý príkaz</DialogTitle>
@@ -32,15 +33,13 @@ export default function FormDialog({
         <Formik
           initialValues={formData}
           onSubmit={(values, actions) => {
-            const newValues = { ...values };
-            newValues.nextRealizationDate =
-              values.nextRealizationDate?.toString();
-
-            handleFormSubmit(newValues);
+            handleFormSubmit({ ...values });
           }}
           validationSchema={validationSchema}
         >
           {(props) => {
+            console.log('rendering', props.values);
+
             return (
               <Form>
                 <Grid container spacing={2}>
@@ -66,10 +65,6 @@ export default function FormDialog({
                       type='text'
                       value={props.values.accountNumber}
                       onChange={props.handleChange}
-                      onBlur={() => {
-                        console.log(props.values.accountNumber);
-                        // props.setFieldValue('accountNumber', 'fsdfds');
-                      }}
                       error={
                         props.touched.accountNumber &&
                         Boolean(props.errors.accountNumber)
@@ -103,8 +98,8 @@ export default function FormDialog({
                     <TextField
                       name='variableSymbol'
                       margin='dense'
-                      label='Variabilný symbol'
-                      type='number'
+                      label='Variabilný symbol*'
+                      type='text'
                       onChange={props.handleChange}
                       value={props.values.variableSymbol}
                       error={
@@ -123,8 +118,8 @@ export default function FormDialog({
                     <TextField
                       name='constantSymbol'
                       margin='dense'
-                      label='Konštantný symbol'
-                      type='number'
+                      label='Konštantný symbol*'
+                      type='text'
                       onChange={props.handleChange}
                       value={props.values.constantSymbol}
                       error={
@@ -140,7 +135,11 @@ export default function FormDialog({
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <Button variant='outlined' color='info'>
+                    <Button
+                      variant='outlined'
+                      color='info'
+                      onClick={handleOpenSymbolDialog}
+                    >
                       Zoznam symbolov
                     </Button>
                   </Grid>
@@ -149,18 +148,12 @@ export default function FormDialog({
                     <TextField
                       name='specificSymbol'
                       margin='dense'
-                      label='Špecifický symbol'
-                      type='number'
+                      label='Špecifický symbol*'
+                      type='text'
                       onChange={props.handleChange}
                       value={props.values.specificSymbol}
-                      error={
-                        props.touched.specificSymbol &&
-                        Boolean(props.errors.specificSymbol)
-                      }
-                      helperText={
-                        props.touched.specificSymbol &&
-                        props.errors.specificSymbol
-                      }
+                      error={Boolean(props.errors.specificSymbol)}
+                      helperText={props.errors.specificSymbol}
                       fullWidth
                       variant='standard'
                     />
@@ -169,8 +162,7 @@ export default function FormDialog({
                     <TextField
                       name='note'
                       margin='dense'
-                      id='name'
-                      label='Poznámka pre príjemcu'
+                      label='Poznámka pre príjemcu*'
                       type='text'
                       value={props.values.note}
                       fullWidth
@@ -178,40 +170,34 @@ export default function FormDialog({
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <TextField
-                      autoFocus
-                      margin='dense'
-                      label='Periodicita'
-                      type='text'
-                      fullWidth
-                      variant='standard'
-                    />
+                    <Select
+                      name='intervalId'
+                      value={props.values.intervalId}
+                      label='Periodicita*'
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
+                      style={{ display: 'block' }}
+                    >
+                      <MenuItem value={1} selected={true}>
+                        Denne
+                      </MenuItem>
+                      <MenuItem value={2}>Týždenne</MenuItem>
+                      <MenuItem value={3}>Mesačne</MenuItem>
+                    </Select>
                   </Grid>
                   <Grid item xs={10}>
-                    <TextField
-                      autoFocus
-                      margin='dense'
-                      label='Deň v týždni'
-                      type='text'
-                      fullWidth
-                      variant='standard'
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    {/* <TextField
-                      margin='dense'
-                      label='Začiatok účinnosti'
-                      type='text'
-                      fullWidth
-                      variant='standard'
-                    /> */}
+                    <IntervalDropdown props={props}></IntervalDropdown>
                   </Grid>
                   <Grid item xs={12}>
                     <DatePicker
-                      label='Začiatok účinnosti'
-                      value={moment(props.values.nextRealizationDate)}
+                      label='Začiatok účinnosti*'
+                      value={
+                        props.values.validFrom
+                          ? moment(props.values.validFrom)
+                          : moment().add(1, 'days')
+                      }
                       onChange={(value) => {
-                        props.setFieldValue('nextRealizationDate', value);
+                        props.setFieldValue('validFrom', value?.format());
                       }}
                       minDate={moment().add(1, 'days')}
                     />

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { StandingOrder } from './standingOrderInterface';
+import { StandingOrder } from '../interfaces/standingOrderInterface';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { TableFooter } from '@mui/material';

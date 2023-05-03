@@ -1,8 +1,8 @@
-const AccountNumber = (props: { accountNumber: string }) => {
+const AccountNumber = (props: { accountNumber?: string }) => {
   return <span>{ibanSeparator(props.accountNumber)}</span>;
 };
 
-const ibanSeparator = (iban: string) => {
+const ibanSeparator = (iban?: string) => {
   if (!iban) {
     return 'AccountNumber';
   }

@@ -1,4 +1,4 @@
-import { StandingOrder } from '../standingOrderInterface';
+import { StandingOrder } from '../../interfaces/standingOrderInterface';
 import AccountNumber from './AccountNumber';
 import Button from '@mui/material/Button';
 import TableCell from '@mui/material/TableCell';
@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import Interval from './Interval';
 import CurrencyFormatter from '../../utils/CurrencyFormatter';
 import moment from 'moment';
+import formDataNormalizer from '../../utils/FormDataNormalizer';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -16,52 +17,54 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const StandingOrderRow = ({
-  transaction,
+  formData,
   handleClickOpen,
+  handleClickDelete,
 }: {
-  transaction: StandingOrder;
-  handleClickOpen: (id: number) => void;
+  formData: StandingOrder;
+  handleClickOpen: (id?: number) => void;
+  handleClickDelete: (id?: number) => void;
 }) => {
-  const {
-    name = '',
-    accountNumber = '',
-    interval = '',
-    amount = 0,
-    nextRealizationDate = '',
-  }: StandingOrder = transaction;
+  const normalizedForm = formDataNormalizer(formData);
 
   return (
     <StyledTableRow>
-      <TableCell>{moment(nextRealizationDate).format('LLLL')}</TableCell>
+      <TableCell>
+        {moment(normalizedForm.nextRealizationDate).format('DD MMM')}
+      </TableCell>
       <TableCell>
         <Grid container spacing={1}>
           <Grid item xs={8}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                {name}
+                {normalizedForm.name}
               </Grid>
               <Grid item xs={4}>
-                <Interval interval={interval} />
+                <Interval interval={normalizedForm.interval} />
               </Grid>
               <Grid item xs={8}>
-                <AccountNumber accountNumber={accountNumber} />
+                <AccountNumber accountNumber={normalizedForm.accountNumber} />
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={4}>
             <Button
               variant='outlined'
-              onClick={() => handleClickOpen(transaction.standingOrderId)}
+              onClick={() => handleClickOpen(normalizedForm.standingOrderId)}
             >
               Update
             </Button>
-            <Button variant='outlined' color='error'>
+            <Button
+              variant='outlined'
+              color='error'
+              onClick={() => handleClickDelete(normalizedForm.standingOrderId)}
+            >
               Delete
             </Button>
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell>{CurrencyFormatter(amount)}</TableCell>
+      <TableCell>{CurrencyFormatter(normalizedForm.amount)}</TableCell>
     </StyledTableRow>
   );
 };
