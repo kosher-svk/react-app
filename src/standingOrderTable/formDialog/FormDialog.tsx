@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Grid, MenuItem, Select } from '@mui/material';
+import { Box, Grid, MenuItem, Modal, Select } from '@mui/material';
 import { StandingOrder } from '../../interfaces/standingOrderInterface';
 
 import validationSchema from './validationSchema';
@@ -12,20 +12,45 @@ import { Formik, Form } from 'formik';
 import { DatePicker } from '@mui/x-date-pickers';
 import moment from 'moment';
 import IntervalDropdown from './IntervalDropdown';
+import { CodeTableContext } from '../../App';
+import { useContext } from 'react';
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  // border: '2px solid #000',
+  borderRadius: 1,
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
 
 export default function FormDialog({
   openDialog,
+  openSymbolsDialog,
   formData,
   handleClose,
   handleFormSubmit,
   handleOpenSymbolDialog,
+  handleCloseSymbolDialog,
 }: {
   openDialog: boolean;
+  openSymbolsDialog: boolean;
   formData: StandingOrder;
   handleClose: Function;
   handleFormSubmit: (formData: StandingOrder) => void;
   handleOpenSymbolDialog: () => void;
+  handleCloseSymbolDialog: () => void;
 }) {
+  const constSymbols = useContext(CodeTableContext).constSymbols;
+
+  console.log('constSymbols', constSymbols);
+
   return (
     <Dialog open={openDialog} onClose={() => handleClose()} fullScreen={true}>
       <DialogTitle>Trvalý príkaz</DialogTitle>
@@ -213,6 +238,35 @@ export default function FormDialog({
                 >
                   Zahodiť
                 </Button>
+                <Modal
+                  open={openSymbolsDialog}
+                  onClose={handleCloseSymbolDialog}
+                  aria-labelledby='parent-modal-title'
+                  aria-describedby='parent-modal-description'
+                >
+                  <Box sx={{ ...style, width: 600 }}>
+                    <Select
+                      name='constantSymbol'
+                      value={props.values.constantSymbol}
+                      label='Konštantný symbol'
+                      onChange={(e) => {
+                        props.handleChange(e);
+                        handleCloseSymbolDialog();
+                      }}
+                      style={{ display: 'block' }}
+                    >
+                      {constSymbols
+                        ? constSymbols.map((constSymbol, index) => {
+                            return (
+                              <MenuItem key={index} value={constSymbol.value}>
+                                {`[${constSymbol.value}] ${constSymbol.text}`}
+                              </MenuItem>
+                            );
+                          })
+                        : null}
+                    </Select>
+                  </Box>
+                </Modal>
               </Form>
             );
           }}
