@@ -1,4 +1,4 @@
-import { StandingOrder } from '../interfaces/standingOrderInterface';
+import { StandingOrder } from '../interfaces/standingOrder.interface';
 
 const formDataNormalizer = (formData: StandingOrder): StandingOrder => {
   const normalizedStandingOrder = {

@@ -1,4 +1,4 @@
-const CurrencyFormatter = (amount?: number) => {
+const currencyFormatter = (amount?: number) => {
   let euro = Intl.NumberFormat('en-DE', {
     style: 'currency',
     currency: 'EUR',
@@ -9,4 +9,4 @@ const CurrencyFormatter = (amount?: number) => {
 
   return amount ? euro.format(amount) : '';
 };
-export default CurrencyFormatter;
+export default currencyFormatter;

@@ -1,10 +1,10 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
-import Navbar from './navbar/Navbar';
-import StandingOrderTable from './standingOrderTable/StandingOrderTable';
+import Navbar from './components/navbar';
+import StandingOrderTable from './components/standingOrderTable';
 import axios from 'axios';
-import { Interval } from './interfaces/intervalInterface';
-import { ConstSymbol } from './interfaces/constSymbolInterface';
-import { CodeTables } from './interfaces/codeTables';
+import { Interval } from './interfaces/interval.interface';
+import { ConstSymbol } from './interfaces/constSymbol.interface';
+import { CodeTables } from './interfaces/codeTables.interface';
 
 const urlAPI =
   'http://cvicna-uloha-vzor-api-edge.akademia.apps.oshift4.softec.sk/api';

@@ -1,4 +1,3 @@
-import { StandingOrder } from '../../interfaces/standingOrderInterface';
 import AccountNumber from './AccountNumber';
 import Button from '@mui/material/Button';
 import TableCell from '@mui/material/TableCell';
@@ -6,9 +5,10 @@ import TableRow from '@mui/material/TableRow';
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Interval from './Interval';
-import CurrencyFormatter from '../../utils/CurrencyFormatter';
 import moment from 'moment';
-import formDataNormalizer from '../../utils/FormDataNormalizer';
+import { StandingOrder } from '../../../interfaces/standingOrder.interface';
+import formDataNormalizer from '../../../utils/FormDataNormalizer';
+import CurrencyFormatter from '../../../utils/CurrencyFormatter';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {

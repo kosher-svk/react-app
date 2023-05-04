@@ -1,6 +1,7 @@
 import { TableBody } from '@mui/material';
-import { StandingOrder } from '../interfaces/standingOrderInterface';
+
 import StandingOrderRow from './standingOrderRow/StandingOrderRow';
+import { StandingOrder } from '../../interfaces/standingOrder.interface';
 
 const StandingOrderTableList = ({
   standingOrderList,

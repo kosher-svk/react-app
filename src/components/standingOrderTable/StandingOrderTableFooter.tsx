@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { StandingOrder } from '../interfaces/standingOrderInterface';
+
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { TableFooter } from '@mui/material';
-import CurrencyFormatter from '../utils/CurrencyFormatter';
+import { StandingOrder } from '../../interfaces/standingOrder.interface';
+import CurrencyFormatter from '../../utils/CurrencyFormatter';
 
 const StandingOrderTableFooter = (props: {
   standingOrderList: StandingOrder[];

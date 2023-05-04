@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
 import StandingOrderTableFooter from './StandingOrderTableFooter';
 import StandingOrderTableHeader from './StandingOrderTableHeader';
-import StandingOrderTableList from './StandingOrderTableList';
-import { StandingOrder } from '../interfaces/standingOrderInterface';
+import StandingOrderTableList from './StandingOrderTableBody';
+import FormDialog from './formDialog/FormDialog';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import Table from '@mui/material/Table';
-import FormDialog from './formDialog/FormDialog';
-import formDataNormalizer from '../utils/FormDataNormalizer';
+
+import formDataNormalizer from '../../utils/FormDataNormalizer';
+import { StandingOrder } from '../../interfaces/standingOrder.interface';
 
 const url =
   'http://cvicna-uloha-vzor-api-edge.akademia.apps.oshift4.softec.sk/api/standingOrder';

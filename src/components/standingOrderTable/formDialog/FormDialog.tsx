@@ -1,19 +1,18 @@
+import { Formik, Form } from 'formik';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Box, Grid, MenuItem, Modal, Select } from '@mui/material';
-import { StandingOrder } from '../../interfaces/standingOrderInterface';
-
-import validationSchema from './validationSchema';
-import { Formik, Form } from 'formik';
 import { DatePicker } from '@mui/x-date-pickers';
+import { Box, Grid, MenuItem, Modal, Select } from '@mui/material';
+import validationSchema from './validationSchema';
 import moment from 'moment';
-import IntervalDropdown from './IntervalDropdown';
-import { CodeTableContext } from '../../App';
 import { useContext } from 'react';
+import { StandingOrder } from '../../../interfaces/standingOrder.interface';
+import { CodeTableContext } from '../../../App';
+import IntervalDropdown from './intervalDropdown/IntervalDropdown';
 
 const style = {
   position: 'absolute' as 'absolute',
