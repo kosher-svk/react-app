@@ -1,10 +1,6 @@
-const AccountNumber = (props: { accountNumber: string }) => {
-  return <span>{ibanSeparator(props.accountNumber)}</span>;
-};
-
-const ibanSeparator = (iban: string) => {
+const ibanFormatter = (iban?: string) => {
   if (!iban) {
-    return 'AccountNumber';
+    return iban;
   }
   iban = iban.toUpperCase();
   iban = iban.replace(/ /g, '');
@@ -20,5 +16,4 @@ const ibanSeparator = (iban: string) => {
   }
   return newIban;
 };
-
-export default AccountNumber;
+export default ibanFormatter;

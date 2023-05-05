@@ -24,14 +24,18 @@ const validationSchema = object({
   amount: number()
     .required('Please enter a valid account')
     .moreThan(0, 'Musite zadat ciastku vacsiu ako 0'),
-  variableSymbol: string()
-    .required('Variabilny symbol moze obsahovat max 10 cislic')
-    .max(10),
-  specificSymbol: string()
-    .required('Specificky symbol moze obsahovat max 10 cislic')
-    .max(10),
-  constantSymbol: string()
-    .required('Konstantny symbol moze obsahovat max 10 cislic')
-    .max(10),
+  variableSymbol: string().max(
+    10,
+    'Variabilny symbol moze obsahovat max 10 cislic'
+  ),
+
+  specificSymbol: string().max(
+    10,
+    'Specificky symbol moze obsahovat max 10 cislic'
+  ),
+  constantSymbol: string().max(
+    10,
+    'Konstantny symbol moze obsahovat max 10 cislic'
+  ),
 });
 export default validationSchema;

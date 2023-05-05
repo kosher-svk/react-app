@@ -1,5 +1,5 @@
 export interface StandingOrder {
-  standingOrderId: number;
+  standingOrderId?: number;
   amount?: number;
   name?: string;
   accountNumber?: string;
@@ -10,6 +10,6 @@ export interface StandingOrder {
   note?: string;
   intervalId?: number;
   intervalSpecification?: number;
-  validFrom?: string;
+  validFrom?: string | moment.Moment;
   nextRealizationDate?: string | moment.Moment;
 }

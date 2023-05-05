@@ -1,12 +1,12 @@
-const CurrencyFormatter = (amount: number) => {
+const currencyFormatter = (amount?: number) => {
   let euro = Intl.NumberFormat('en-DE', {
     style: 'currency',
     currency: 'EUR',
-    minimumFractionDigits: 3,
+    minimumFractionDigits: 2,
     currencySign: 'accounting',
-    useGrouping: false,
+    useGrouping: true,
   });
 
-  return euro.format(amount);
+  return amount ? euro.format(amount) : '';
 };
-export default CurrencyFormatter;
+export default currencyFormatter;

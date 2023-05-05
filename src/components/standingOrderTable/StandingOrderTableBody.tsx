@@ -1,22 +1,26 @@
 import { TableBody } from '@mui/material';
-import { StandingOrder } from './standingOrderInterface';
+
 import StandingOrderRow from './standingOrderRow/StandingOrderRow';
+import { StandingOrder } from '../../interfaces/standingOrder.interface';
 
 const StandingOrderTableList = ({
   standingOrderList,
   handleClickOpen,
+  handleClickDelete,
 }: {
   standingOrderList: StandingOrder[];
-  handleClickOpen: (id: number) => void;
+  handleClickOpen: (id?: number) => void;
+  handleClickDelete: (id?: number) => void;
 }) => {
   return (
     <TableBody>
-      {standingOrderList.map((transaction) => {
+      {standingOrderList.map((formData) => {
         return (
           <StandingOrderRow
-            transaction={transaction}
-            key={transaction.standingOrderId}
+            formData={formData}
+            key={formData.standingOrderId}
             handleClickOpen={handleClickOpen}
+            handleClickDelete={handleClickDelete}
           />
         );
       })}

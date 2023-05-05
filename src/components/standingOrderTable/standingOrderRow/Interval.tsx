@@ -1,6 +1,6 @@
 import Chip from '@mui/material/Chip';
 
-const Interval = (props: { interval: string }) => {
+const Interval = (props: { interval?: string }) => {
   const { interval } = props;
   switch (interval) {
     case 'Mesačne':
