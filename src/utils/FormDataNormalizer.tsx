@@ -11,8 +11,8 @@ const formDataNormalizer = (formData: StandingOrder): StandingOrder => {
     constantSymbol: formData?.constantSymbol || '',
     interval: formData?.interval || '',
     note: formData?.note || '',
-    intervalId: formData?.intervalId || 1,
-    intervalSpecification: formData?.intervalSpecification || 1,
+    intervalId: formData?.intervalId || 0,
+    intervalSpecification: formData?.intervalSpecification || 0,
     validFrom: formData?.validFrom || '',
     nextRealizationDate: formData?.nextRealizationDate || '',
   };

@@ -1,4 +1,5 @@
 import { MenuItem, Select } from '@mui/material';
+import moment from 'moment';
 
 const IntervalDropdown = ({ props }: { props: any }) => {
   const daysInWeek = [
@@ -17,17 +18,13 @@ const IntervalDropdown = ({ props }: { props: any }) => {
       return (
         <Select
           name='intervalSpecification'
-          value={props.values.intervalSpecification}
+          value={props.values.intervalSpecification || 1}
           label='Periodicita'
           onChange={props.handleChange}
           style={{ display: 'block' }}
         >
           {daysInWeek.map((day, index) => {
-            return (
-              <MenuItem selected={index === 3} value={index + 1}>
-                {day}
-              </MenuItem>
-            );
+            return <MenuItem value={index + 1}>{day}</MenuItem>;
           })}
         </Select>
       );
@@ -36,7 +33,9 @@ const IntervalDropdown = ({ props }: { props: any }) => {
       return (
         <Select
           name='intervalSpecification'
-          value={props.values.intervalSpecification}
+          value={
+            props.values.intervalSpecification || moment().add(1, 'days').date()
+          }
           label='Periodicita'
           onChange={props.handleChange}
           style={{ display: 'block' }}

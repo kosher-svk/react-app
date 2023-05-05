@@ -16,7 +16,6 @@ const StandingOrderTableHeader = ({
             Nový trvalý príkaz
           </Button>
         </TableCell>
-        <TableCell colSpan={3}></TableCell>
       </TableRow>
     </TableHead>
   );

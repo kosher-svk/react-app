@@ -1,14 +1,24 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
-import Navbar from './components/navbar';
-import StandingOrderTable from './components/standingOrderTable';
+import {
+  createContext,
+  useEffect,
+  useMemo,
+  useState,
+  lazy,
+  Suspense,
+} from 'react';
 import axios from 'axios';
 import { Interval } from './interfaces/interval.interface';
 import { ConstSymbol } from './interfaces/constSymbol.interface';
 import { CodeTables } from './interfaces/codeTables.interface';
+import { INTERVALS_URL, SYMBOLS_URL } from './constants';
+import { CircularProgress } from '@mui/material';
 
-const urlAPI =
-  'http://cvicna-uloha-vzor-api-edge.akademia.apps.oshift4.softec.sk/api';
 export const CodeTableContext = createContext<CodeTables>({});
+
+const NavbarLazy = lazy(() => import('./components/navbar'));
+const StandingOrderTableLazy = lazy(
+  () => import('./components/standingOrderTable')
+);
 
 const App = () => {
   const [intervals, setIntervals] = useState<Interval[]>();
@@ -16,8 +26,7 @@ const App = () => {
 
   const getIntervals = async () => {
     try {
-      const url = urlAPI + '/code-table/intervals';
-      const response = await axios.get<Interval[]>(url);
+      const response = await axios.get<Interval[]>(INTERVALS_URL);
       if (response.data) {
         setIntervals(response.data);
       }
@@ -26,8 +35,7 @@ const App = () => {
 
   const getConstSymbols = async () => {
     try {
-      const url = urlAPI + '/code-table/constant-symbols';
-      const response = await axios.get<ConstSymbol[]>(url);
+      const response = await axios.get<ConstSymbol[]>(SYMBOLS_URL);
       const data = response.data;
       if (data) {
         setConstSymbols(data);
@@ -49,8 +57,10 @@ const App = () => {
   return (
     <div>
       <CodeTableContext.Provider value={codeTables}>
-        <Navbar />
-        <StandingOrderTable />
+        <Suspense fallback={<CircularProgress />}>
+          <NavbarLazy />
+          <StandingOrderTableLazy />
+        </Suspense>
       </CodeTableContext.Provider>
     </div>
   );

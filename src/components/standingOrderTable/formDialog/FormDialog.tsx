@@ -12,7 +12,7 @@ import moment from 'moment';
 import { useContext } from 'react';
 import { StandingOrder } from '../../../interfaces/standingOrder.interface';
 import { CodeTableContext } from '../../../App';
-import IntervalDropdown from './intervalDropdown/IntervalDropdown';
+import IntervalDropdown from './IntervalDropdown';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -63,6 +63,9 @@ export default function FormDialog({
         >
           {(props) => {
             console.log('rendering', props.values);
+            const defaultConstantSymbol =
+              props.values.constantSymbol ||
+              (constSymbols && constSymbols[0] && constSymbols[0].value);
 
             return (
               <Form>
@@ -196,15 +199,13 @@ export default function FormDialog({
                   <Grid item xs={2}>
                     <Select
                       name='intervalId'
-                      value={props.values.intervalId}
+                      value={props.values.intervalId || 1}
                       label='Periodicita*'
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
                       style={{ display: 'block' }}
                     >
-                      <MenuItem value={1} selected={true}>
-                        Denne
-                      </MenuItem>
+                      <MenuItem value={1}>Denne</MenuItem>
                       <MenuItem value={2}>Týždenne</MenuItem>
                       <MenuItem value={3}>Mesačne</MenuItem>
                     </Select>
@@ -246,7 +247,7 @@ export default function FormDialog({
                   <Box sx={{ ...style, width: 600 }}>
                     <Select
                       name='constantSymbol'
-                      value={props.values.constantSymbol}
+                      value={defaultConstantSymbol}
                       label='Konštantný symbol'
                       onChange={(e) => {
                         props.handleChange(e);
