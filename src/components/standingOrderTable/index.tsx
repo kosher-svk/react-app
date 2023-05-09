@@ -7,7 +7,30 @@ import axios from 'axios';
 import Table from '@mui/material/Table';
 import formDataNormalizer from '../../utils/FormDataNormalizer';
 import { StandingOrder } from '../../interfaces/standingOrder.interface';
-import { STANDING_ORDER_URL } from '../../constants';
+import {
+  GRID_CARD_INIT_URL,
+  GRID_CARD_VALIDATE_URL,
+  STANDING_ORDER_URL,
+} from '../../constants';
+import { Box, Button, Modal, TextField } from '@mui/material';
+import { Form, Formik } from 'formik';
+import validationSchema from './formDialog/validationSchemaPINcode';
+import { Validation } from '../../interfaces/validation.interface';
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  // border: '2px solid #000',
+  borderRadius: 1,
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
 
 const StandingOrderTable = () => {
   const [isLoading, setLoading] = useState(true);
@@ -18,12 +41,24 @@ const StandingOrderTable = () => {
 
   const [openSymbolsDialog, setSymbolsDialog] = useState(false);
 
-  const handleClickOpenSymbolDialog = () => {
+  const [openAuthorizationDialog, setAuthorizationDialog] = useState(false);
+  const [gridCardCoordinates, setGridCardCoordinates] = useState(-1);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  const handleOpenSymbolDialog = () => {
     setSymbolsDialog(true);
   };
 
-  const handleClickCloseSymbolDialog = () => {
+  const handleCloseSymbolDialog = () => {
     setSymbolsDialog(false);
+  };
+
+  const handleOpenAuthorizationDialog = () => {
+    setAuthorizationDialog(true);
+  };
+
+  const handleCloseAuthorizationDialog = () => {
+    setAuthorizationDialog(false);
   };
 
   const handleClickOpenFormDialog = async (id?: number) => {
@@ -103,15 +138,57 @@ const StandingOrderTable = () => {
 
   const deleteForm = async (standingOrderId?: number) => {
     if (!standingOrderId) return;
-    try {
-      const formUrl = STANDING_ORDER_URL.concat('/' + standingOrderId);
-      const response = await axios.delete(formUrl);
-      if (response.status === 200) {
-        getAllForms();
+    authorization();
+    console.log(1);
+
+    if (isAuthorized) {
+      console.log(3);
+      try {
+        const formUrl = STANDING_ORDER_URL.concat('/' + standingOrderId);
+        const response = await axios.delete(formUrl);
+        if (response.status === 200) {
+          getAllForms();
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
+  };
+
+  const authorization = () => {
+    setIsAuthorized(false);
+    getGridCardCoordinates();
+    if (gridCardCoordinates) {
+      handleOpenAuthorizationDialog();
+    }
+  };
+
+  const handleSubmitAutorization = async (pinCode: number) => {
+    if (pinCode) {
+      const validation: Validation = {
+        pin: pinCode,
+        coordinate: gridCardCoordinates,
+      };
+      const response = await axios.post<string>(
+        GRID_CARD_VALIDATE_URL,
+        validation
+      );
+      const token = response.data;
+      if (token) {
+        setIsAuthorized(true);
+      }
+    }
+  };
+
+  const getGridCardCoordinates = async () => {
+    try {
+      const response = await axios.get<number>(GRID_CARD_INIT_URL);
+      const gridCardCoordinates = response.data;
+      console.log(gridCardCoordinates);
+      setGridCardCoordinates(gridCardCoordinates);
+
+      return response.status;
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -133,10 +210,70 @@ const StandingOrderTable = () => {
         formData={formData}
         handleClose={handleClickCloseFormDialog}
         handleFormSubmit={handleFormSubmit}
-        handleOpenSymbolDialog={handleClickOpenSymbolDialog}
+        handleOpenSymbolDialog={handleOpenSymbolDialog}
         openSymbolsDialog={openSymbolsDialog}
-        handleCloseSymbolDialog={handleClickCloseSymbolDialog}
+        handleCloseSymbolDialog={handleCloseSymbolDialog}
       />
+      <Modal
+        open={openAuthorizationDialog}
+        onClose={handleCloseAuthorizationDialog}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
+        <Box sx={style}>
+          <div>
+            <p>
+              Zadajte PIN kód z riadku {String(gridCardCoordinates)[0]} a stĺpca{' '}
+              {String(gridCardCoordinates)[1]}
+            </p>
+            <Formik
+              initialValues={{ PINcode: 0 }}
+              onSubmit={(values) => {
+                console.log(values.PINcode);
+                handleSubmitAutorization(values.PINcode);
+                handleCloseAuthorizationDialog();
+              }}
+              validationSchema={validationSchema}
+            >
+              {({ values, handleChange, handleBlur, setFieldValue }) => (
+                <Form>
+                  <TextField
+                    label='PIN kód'
+                    variant='outlined'
+                    autoFocus
+                    margin='dense'
+                    name='PINcode'
+                    type='number'
+                    value={values.PINcode}
+                    onChange={handleChange}
+                  />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      marginTop: '1rem',
+                    }}
+                  >
+                    <Button
+                      type='submit'
+                      variant='contained'
+                      sx={{ marginRight: '1rem' }}
+                    >
+                      OK
+                    </Button>
+                    <Button
+                      onClick={handleCloseAuthorizationDialog}
+                      variant='outlined'
+                    >
+                      Zrušit
+                    </Button>
+                  </Box>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };
