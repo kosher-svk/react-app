@@ -47,26 +47,25 @@ export default function FormDialog({
   handleCloseSymbolDialog: () => void;
 }) {
   const constSymbols = useContext(CodeTableContext).constSymbols;
-
-  console.log('constSymbols', constSymbols);
-
+  const defaultFormData = {
+    ...formData,
+    validFrom: formData.validFrom || moment().add(1, 'days'),
+  };
   return (
     <Dialog open={openDialog} onClose={() => handleClose()} fullScreen={true}>
       <DialogTitle>Trvalý príkaz</DialogTitle>
       <DialogContent>
         <Formik
-          initialValues={formData}
+          initialValues={defaultFormData}
           onSubmit={(values, actions) => {
             handleFormSubmit({ ...values });
           }}
           validationSchema={validationSchema}
         >
           {(props) => {
-            console.log('rendering', props.values);
             const defaultConstantSymbol =
               props.values.constantSymbol ||
               (constSymbols && constSymbols[0] && constSymbols[0].value);
-
             return (
               <Form>
                 <Grid container spacing={2}>

@@ -12,25 +12,8 @@ import {
   GRID_CARD_VALIDATE_URL,
   STANDING_ORDER_URL,
 } from '../../constants';
-import { Box, Button, Modal, TextField } from '@mui/material';
-import { Form, Formik } from 'formik';
-import validationSchema from './formDialog/validationSchemaPINcode';
 import { Validation } from '../../interfaces/validation.interface';
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  // border: '2px solid #000',
-  borderRadius: 1,
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
+import AuthorizationDialog from './authorizationDialog/AuthorizationDialog';
 
 const StandingOrderTable = () => {
   const [isLoading, setLoading] = useState(true);
@@ -42,8 +25,6 @@ const StandingOrderTable = () => {
   const [openSymbolsDialog, setSymbolsDialog] = useState(false);
 
   const [openAuthorizationDialog, setAuthorizationDialog] = useState(false);
-  const [gridCardCoordinates, setGridCardCoordinates] = useState(-1);
-  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const handleOpenSymbolDialog = () => {
     setSymbolsDialog(true);
@@ -132,63 +113,50 @@ const StandingOrderTable = () => {
         STANDING_ORDER_URL,
         normalizedForm
       );
-      return response.data;
+      return response;
     } catch (error) {}
   };
 
-  const deleteForm = async (standingOrderId?: number) => {
+  const deleteForm = (standingOrderId?: number) => {
     if (!standingOrderId) return;
-    authorization();
-    console.log(1);
-
-    if (isAuthorized) {
-      console.log(3);
+    authorization(() => {
+      debugger;
       try {
         const formUrl = STANDING_ORDER_URL.concat('/' + standingOrderId);
-        const response = await axios.delete(formUrl);
-        if (response.status === 200) {
-          getAllForms();
-        }
+        const response = axios.delete(formUrl);
+        response.then((res) => {
+          if (res.status === 200) {
+            getAllForms();
+          }
+        });
       } catch (error) {
         console.log(error);
       }
-    }
+    });
+  };
+  const [callbackFunction, setCallbackFunction] = useState<() => void>(
+    () => {}
+  );
+  const authorization = (callback: () => void) => {
+    debugger;
+    setCallbackFunction(() => callback);
+    handleOpenAuthorizationDialog();
   };
 
-  const authorization = () => {
-    setIsAuthorized(false);
-    getGridCardCoordinates();
-    if (gridCardCoordinates) {
-      handleOpenAuthorizationDialog();
-    }
-  };
-
-  const handleSubmitAutorization = async (pinCode: number) => {
-    if (pinCode) {
-      const validation: Validation = {
-        pin: pinCode,
-        coordinate: gridCardCoordinates,
-      };
+  const handleSubmitAuthorization = async (
+    authorizationData: Validation,
+    callback: () => void
+  ) => {
+    if (authorizationData) {
       const response = await axios.post<string>(
         GRID_CARD_VALIDATE_URL,
-        validation
+        authorizationData
       );
       const token = response.data;
       if (token) {
-        setIsAuthorized(true);
+        callback();
       }
     }
-  };
-
-  const getGridCardCoordinates = async () => {
-    try {
-      const response = await axios.get<number>(GRID_CARD_INIT_URL);
-      const gridCardCoordinates = response.data;
-      console.log(gridCardCoordinates);
-      setGridCardCoordinates(gridCardCoordinates);
-
-      return response.status;
-    } catch (error) {}
   };
 
   useEffect(() => {
@@ -206,74 +174,20 @@ const StandingOrderTable = () => {
         <StandingOrderTableFooter standingOrderList={dataStandingOrders} />
       </Table>
       <FormDialog
-        openDialog={openFormDialog}
         formData={formData}
+        openDialog={openFormDialog}
         handleClose={handleClickCloseFormDialog}
         handleFormSubmit={handleFormSubmit}
         handleOpenSymbolDialog={handleOpenSymbolDialog}
         openSymbolsDialog={openSymbolsDialog}
         handleCloseSymbolDialog={handleCloseSymbolDialog}
       />
-      <Modal
-        open={openAuthorizationDialog}
-        onClose={handleCloseAuthorizationDialog}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <Box sx={style}>
-          <div>
-            <p>
-              Zadajte PIN kód z riadku {String(gridCardCoordinates)[0]} a stĺpca{' '}
-              {String(gridCardCoordinates)[1]}
-            </p>
-            <Formik
-              initialValues={{ PINcode: 0 }}
-              onSubmit={(values) => {
-                console.log(values.PINcode);
-                handleSubmitAutorization(values.PINcode);
-                handleCloseAuthorizationDialog();
-              }}
-              validationSchema={validationSchema}
-            >
-              {({ values, handleChange, handleBlur, setFieldValue }) => (
-                <Form>
-                  <TextField
-                    label='PIN kód'
-                    variant='outlined'
-                    autoFocus
-                    margin='dense'
-                    name='PINcode'
-                    type='number'
-                    value={values.PINcode}
-                    onChange={handleChange}
-                  />
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      marginTop: '1rem',
-                    }}
-                  >
-                    <Button
-                      type='submit'
-                      variant='contained'
-                      sx={{ marginRight: '1rem' }}
-                    >
-                      OK
-                    </Button>
-                    <Button
-                      onClick={handleCloseAuthorizationDialog}
-                      variant='outlined'
-                    >
-                      Zrušit
-                    </Button>
-                  </Box>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </Box>
-      </Modal>
+      <AuthorizationDialog
+        openDialog={openAuthorizationDialog}
+        closeDialog={handleCloseAuthorizationDialog}
+        handleSubmitAuthorization={handleSubmitAuthorization}
+        callbackFunction={callbackFunction}
+      />
     </div>
   );
 };
