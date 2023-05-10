@@ -59,17 +59,13 @@ const StandingOrderTable = () => {
     if (formData) {
       if (formData.standingOrderId) {
         try {
-          await updateForm(formData);
-          getAllForms();
-          handleClickCloseFormDialog();
+          updateForm(formData);
         } catch (error) {
           console.log(error);
         }
       } else {
         try {
-          await createForm(formData);
-          getAllForms();
-          handleClickCloseFormDialog();
+          createForm(formData);
         } catch (error) {}
       }
     }
@@ -84,14 +80,19 @@ const StandingOrderTable = () => {
     } catch (error) {}
   };
 
-  const updateForm = async (standingOrder: StandingOrder) => {
-    try {
-      const formUrl = STANDING_ORDER_URL.concat(
-        '/' + standingOrder.standingOrderId
-      );
-      const response = await axios.put<StandingOrder>(formUrl, standingOrder);
-      return response.status;
-    } catch (error) {}
+  const updateForm = (standingOrder: StandingOrder) => {
+    authorization(() => {
+      try {
+        const formUrl = STANDING_ORDER_URL.concat(
+          '/' + standingOrder.standingOrderId
+        );
+        const response = axios.put<StandingOrder>(formUrl, standingOrder);
+        return response.then((res) => {
+          getAllForms();
+          handleClickCloseFormDialog();
+        });
+      } catch (error) {}
+    });
   };
 
   const getForm = async (standingOrderId: number) => {
@@ -105,22 +106,28 @@ const StandingOrderTable = () => {
     } catch (error) {}
   };
 
-  const createForm = async (standingOrder: StandingOrder) => {
-    try {
-      const normalizedForm = formDataNormalizer(standingOrder);
-
-      const response = await axios.post<StandingOrder>(
-        STANDING_ORDER_URL,
-        normalizedForm
-      );
-      return response;
-    } catch (error) {}
+  const createForm = (standingOrder: StandingOrder) => {
+    if (!standingOrder) return;
+    authorization(() => {
+      try {
+        const normalizedForm = formDataNormalizer(standingOrder);
+        const response = axios.post<StandingOrder>(
+          STANDING_ORDER_URL,
+          normalizedForm
+        );
+        return response.then((res) => {
+          getAllForms();
+          handleClickCloseFormDialog();
+        });
+      } catch (error) {
+        return null;
+      }
+    });
   };
 
   const deleteForm = (standingOrderId?: number) => {
     if (!standingOrderId) return;
     authorization(() => {
-      debugger;
       try {
         const formUrl = STANDING_ORDER_URL.concat('/' + standingOrderId);
         const response = axios.delete(formUrl);
