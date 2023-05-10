@@ -7,23 +7,22 @@ import axios from 'axios';
 import Table from '@mui/material/Table';
 import formDataNormalizer from '../../utils/FormDataNormalizer';
 import { StandingOrder } from '../../interfaces/standingOrder.interface';
-import {
-  GRID_CARD_INIT_URL,
-  GRID_CARD_VALIDATE_URL,
-  STANDING_ORDER_URL,
-} from '../../constants';
+import { GRID_CARD_VALIDATE_URL, STANDING_ORDER_URL } from '../../constants';
 import { Validation } from '../../interfaces/validation.interface';
 import AuthorizationDialog from './authorizationDialog/AuthorizationDialog';
 
+const Styles = {
+  table: {
+    margin: '20px',
+    width: '1240px',
+  },
+};
+
 const StandingOrderTable = () => {
-  const [isLoading, setLoading] = useState(true);
   const [dataStandingOrders, setData] = useState<StandingOrder[]>([]);
-
-  const [openFormDialog, setOpenFormDialog] = useState(false);
   const [formData, setFormData] = useState<StandingOrder>({} as StandingOrder);
-
+  const [openFormDialog, setOpenFormDialog] = useState(false);
   const [openSymbolsDialog, setSymbolsDialog] = useState(false);
-
   const [openAuthorizationDialog, setAuthorizationDialog] = useState(false);
 
   const handleOpenSymbolDialog = () => {
@@ -76,7 +75,6 @@ const StandingOrderTable = () => {
       const response = await axios.get<StandingOrder[]>(STANDING_ORDER_URL);
       const data = response.data;
       setData(data);
-      setLoading(false);
     } catch (error) {}
   };
 
@@ -171,7 +169,7 @@ const StandingOrderTable = () => {
   }, []);
   return (
     <div>
-      <Table className='table'>
+      <Table className='table' style={Styles.table}>
         <StandingOrderTableHeader handleClickOpen={handleClickOpenFormDialog} />
         <StandingOrderTableList
           standingOrderList={dataStandingOrders}

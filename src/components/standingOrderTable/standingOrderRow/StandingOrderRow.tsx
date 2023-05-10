@@ -20,6 +20,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const rowStyles = {
+  date: {
+    textAlign: 'center',
+    fontSize: '20px',
+    textTransform: 'capitalize',
+  },
   button: {
     display: 'none',
   },
@@ -38,8 +43,8 @@ const StandingOrderRow = ({
 
   return (
     <StyledTableRow>
-      <TableCell>
-        {moment(normalizedForm.nextRealizationDate).format('DD MMM')}
+      <TableCell sx={rowStyles.date}>
+        {moment(normalizedForm.nextRealizationDate).format('DD. MMM')}
       </TableCell>
       <TableCell>
         <Grid container spacing={1}>
