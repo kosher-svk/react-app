@@ -14,7 +14,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
+  '&:hover button': {
+    display: 'block',
+  },
 }));
+
+const rowStyles = {
+  button: {
+    display: 'none',
+  },
+};
 
 const StandingOrderRow = ({
   formData,
@@ -50,6 +59,7 @@ const StandingOrderRow = ({
           <Grid item xs={4}>
             <Button
               variant='outlined'
+              sx={rowStyles.button}
               onClick={() => handleClickOpen(normalizedForm.standingOrderId)}
             >
               Update
@@ -57,6 +67,7 @@ const StandingOrderRow = ({
             <Button
               variant='outlined'
               color='error'
+              sx={rowStyles.button}
               onClick={() => handleClickDelete(normalizedForm.standingOrderId)}
             >
               Delete
