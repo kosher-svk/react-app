@@ -7,7 +7,13 @@ import axios from 'axios';
 import Table from '@mui/material/Table';
 import formDataNormalizer from '../../utils/FormDataNormalizer';
 import { StandingOrder } from '../../interfaces/standingOrder.interface';
-import { STANDING_ORDER_URL } from '../../constants';
+import {
+  GRID_CARD_INIT_URL,
+  GRID_CARD_VALIDATE_URL,
+  STANDING_ORDER_URL,
+} from '../../constants';
+import { Validation } from '../../interfaces/validation.interface';
+import AuthorizationDialog from './authorizationDialog/AuthorizationDialog';
 
 const StandingOrderTable = () => {
   const [isLoading, setLoading] = useState(true);
@@ -18,12 +24,22 @@ const StandingOrderTable = () => {
 
   const [openSymbolsDialog, setSymbolsDialog] = useState(false);
 
-  const handleClickOpenSymbolDialog = () => {
+  const [openAuthorizationDialog, setAuthorizationDialog] = useState(false);
+
+  const handleOpenSymbolDialog = () => {
     setSymbolsDialog(true);
   };
 
-  const handleClickCloseSymbolDialog = () => {
+  const handleCloseSymbolDialog = () => {
     setSymbolsDialog(false);
+  };
+
+  const handleOpenAuthorizationDialog = () => {
+    setAuthorizationDialog(true);
+  };
+
+  const handleCloseAuthorizationDialog = () => {
+    setAuthorizationDialog(false);
   };
 
   const handleClickOpenFormDialog = async (id?: number) => {
@@ -43,17 +59,13 @@ const StandingOrderTable = () => {
     if (formData) {
       if (formData.standingOrderId) {
         try {
-          await updateForm(formData);
-          getAllForms();
-          handleClickCloseFormDialog();
+          updateForm(formData);
         } catch (error) {
           console.log(error);
         }
       } else {
         try {
-          await createForm(formData);
-          getAllForms();
-          handleClickCloseFormDialog();
+          createForm(formData);
         } catch (error) {}
       }
     }
@@ -68,14 +80,19 @@ const StandingOrderTable = () => {
     } catch (error) {}
   };
 
-  const updateForm = async (standingOrder: StandingOrder) => {
-    try {
-      const formUrl = STANDING_ORDER_URL.concat(
-        '/' + standingOrder.standingOrderId
-      );
-      const response = await axios.put<StandingOrder>(formUrl, standingOrder);
-      return response.status;
-    } catch (error) {}
+  const updateForm = (standingOrder: StandingOrder) => {
+    authorization(() => {
+      try {
+        const formUrl = STANDING_ORDER_URL.concat(
+          '/' + standingOrder.standingOrderId
+        );
+        const response = axios.put<StandingOrder>(formUrl, standingOrder);
+        return response.then((res) => {
+          getAllForms();
+          handleClickCloseFormDialog();
+        });
+      } catch (error) {}
+    });
   };
 
   const getForm = async (standingOrderId: number) => {
@@ -89,28 +106,63 @@ const StandingOrderTable = () => {
     } catch (error) {}
   };
 
-  const createForm = async (standingOrder: StandingOrder) => {
-    try {
-      const normalizedForm = formDataNormalizer(standingOrder);
-
-      const response = await axios.post<StandingOrder>(
-        STANDING_ORDER_URL,
-        normalizedForm
-      );
-      return response.data;
-    } catch (error) {}
+  const createForm = (standingOrder: StandingOrder) => {
+    if (!standingOrder) return;
+    authorization(() => {
+      try {
+        const normalizedForm = formDataNormalizer(standingOrder);
+        const response = axios.post<StandingOrder>(
+          STANDING_ORDER_URL,
+          normalizedForm
+        );
+        return response.then((res) => {
+          getAllForms();
+          handleClickCloseFormDialog();
+        });
+      } catch (error) {
+        return null;
+      }
+    });
   };
 
-  const deleteForm = async (standingOrderId?: number) => {
+  const deleteForm = (standingOrderId?: number) => {
     if (!standingOrderId) return;
-    try {
-      const formUrl = STANDING_ORDER_URL.concat('/' + standingOrderId);
-      const response = await axios.delete(formUrl);
-      if (response.status === 200) {
-        getAllForms();
+    authorization(() => {
+      try {
+        const formUrl = STANDING_ORDER_URL.concat('/' + standingOrderId);
+        const response = axios.delete(formUrl);
+        response.then((res) => {
+          if (res.status === 200) {
+            getAllForms();
+          }
+        });
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    });
+  };
+  const [callbackFunction, setCallbackFunction] = useState<() => void>(
+    () => {}
+  );
+  const authorization = (callback: () => void) => {
+    debugger;
+    setCallbackFunction(() => callback);
+    handleOpenAuthorizationDialog();
+  };
+
+  const handleSubmitAuthorization = async (
+    authorizationData: Validation,
+    callback: () => void
+  ) => {
+    if (authorizationData) {
+      const response = await axios.post<string>(
+        GRID_CARD_VALIDATE_URL,
+        authorizationData
+      );
+      const token = response.data;
+      if (token) {
+        callback();
+      }
     }
   };
 
@@ -129,13 +181,19 @@ const StandingOrderTable = () => {
         <StandingOrderTableFooter standingOrderList={dataStandingOrders} />
       </Table>
       <FormDialog
-        openDialog={openFormDialog}
         formData={formData}
+        openDialog={openFormDialog}
         handleClose={handleClickCloseFormDialog}
         handleFormSubmit={handleFormSubmit}
-        handleOpenSymbolDialog={handleClickOpenSymbolDialog}
+        handleOpenSymbolDialog={handleOpenSymbolDialog}
         openSymbolsDialog={openSymbolsDialog}
-        handleCloseSymbolDialog={handleClickCloseSymbolDialog}
+        handleCloseSymbolDialog={handleCloseSymbolDialog}
+      />
+      <AuthorizationDialog
+        openDialog={openAuthorizationDialog}
+        closeDialog={handleCloseAuthorizationDialog}
+        handleSubmitAuthorization={handleSubmitAuthorization}
+        callbackFunction={callbackFunction}
       />
     </div>
   );
