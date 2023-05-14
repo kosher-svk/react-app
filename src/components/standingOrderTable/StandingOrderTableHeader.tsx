@@ -3,12 +3,15 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-const Styles = {
+const styles = {
+  container: {
+    textAlign: 'right',
+    padding: '1rem',
+    backgroundColor: '#50A8C6',
+    color: 'white',
+  },
   button: {
-    padding: '10px',
-    display: 'block',
-    marginLeft: 'auto',
-    marginRight: 0,
+    backgroundColor: '#00c5ca',
   },
 };
 
@@ -18,12 +21,12 @@ const StandingOrderTableHeader = ({
   handleClickOpen: (id: number) => void;
 }) => {
   return (
-    <TableHead style={{ backgroundColor: 'rgba(150, 150, 150)' }}>
+    <TableHead>
       <TableRow>
-        <TableCell colSpan={3}>
+        <TableCell colSpan={3} sx={styles.container}>
           <Button
-            style={Styles.button}
             variant='contained'
+            style={styles.button}
             onClick={() => handleClickOpen(0)}
           >
             Nový trvalý príkaz

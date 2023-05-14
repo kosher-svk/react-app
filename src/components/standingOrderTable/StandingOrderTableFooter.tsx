@@ -2,20 +2,17 @@ import { useMemo } from 'react';
 
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import { Grid, TableFooter } from '@mui/material';
+import { Box, TableFooter } from '@mui/material';
 import { StandingOrder } from '../../interfaces/standingOrder.interface';
 import CurrencyFormatter from '../../utils/CurrencyFormatter';
 
 const Styles = {
   container: {
-    color: 'rgba(250, 250, 250)',
-    padding: '20px',
-    backgroundColor: 'rgba(150, 150, 150)',
-    alignItems: 'center',
+    backgroundColor: '#50A8C6',
   },
   summary: {
-    width: '400px',
-    padding: '20px',
+    fontSize: '1.3rem',
+    color: 'white',
   },
 };
 
@@ -40,15 +37,11 @@ const StandingOrderTableFooter = (props: {
   return (
     <TableFooter style={Styles.container}>
       <TableRow>
-        <TableCell style={Styles.summary} colSpan={3}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              Pocet trvalych prikazov: {numberOfStandingOrders}
-            </Grid>
-            <Grid item xs={6}>
-              Celkova suma: {totalMoney}
-            </Grid>
-          </Grid>
+        <TableCell sx={Styles.summary} colSpan={3}>
+          <Box display='flex' justifyContent='space-around'>
+            <div>Počet trvalých príkazov: {numberOfStandingOrders}</div>
+            <div>Celková suma: {totalMoney}</div>
+          </Box>
         </TableCell>
       </TableRow>
     </TableFooter>

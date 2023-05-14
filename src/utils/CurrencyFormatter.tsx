@@ -7,6 +7,6 @@ const currencyFormatter = (amount?: number) => {
     useGrouping: true,
   });
 
-  return amount ? euro.format(amount) : '';
+  return amount ? euro.format(amount > 0 ? -amount : amount) : '';
 };
 export default currencyFormatter;

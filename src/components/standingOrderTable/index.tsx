@@ -13,8 +13,10 @@ import AuthorizationDialog from './authorizationDialog/AuthorizationDialog';
 
 const Styles = {
   table: {
-    margin: '20px',
-    width: '1240px',
+    padding: '1rem',
+    paddingRight: '7rem',
+    paddingLeft: '7rem',
+    paddingBottom: '0rem',
   },
 };
 
@@ -86,6 +88,7 @@ const StandingOrderTable = () => {
         );
         const response = axios.put<StandingOrder>(formUrl, standingOrder);
         return response.then((res) => {
+          console.log(res);
           getAllForms();
           handleClickCloseFormDialog();
         });
@@ -117,9 +120,7 @@ const StandingOrderTable = () => {
           getAllForms();
           handleClickCloseFormDialog();
         });
-      } catch (error) {
-        return null;
-      }
+      } catch (error) {}
     });
   };
 
@@ -143,7 +144,6 @@ const StandingOrderTable = () => {
     () => {}
   );
   const authorization = (callback: () => void) => {
-    debugger;
     setCallbackFunction(() => callback);
     handleOpenAuthorizationDialog();
   };
@@ -168,8 +168,8 @@ const StandingOrderTable = () => {
     getAllForms();
   }, []);
   return (
-    <div>
-      <Table className='table' style={Styles.table}>
+    <div style={Styles.table}>
+      <Table>
         <StandingOrderTableHeader handleClickOpen={handleClickOpenFormDialog} />
         <StandingOrderTableList
           standingOrderList={dataStandingOrders}
