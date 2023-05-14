@@ -7,23 +7,24 @@ import axios from 'axios';
 import Table from '@mui/material/Table';
 import formDataNormalizer from '../../utils/FormDataNormalizer';
 import { StandingOrder } from '../../interfaces/standingOrder.interface';
-import {
-  GRID_CARD_INIT_URL,
-  GRID_CARD_VALIDATE_URL,
-  STANDING_ORDER_URL,
-} from '../../constants';
+import { GRID_CARD_VALIDATE_URL, STANDING_ORDER_URL } from '../../constants';
 import { Validation } from '../../interfaces/validation.interface';
 import AuthorizationDialog from './authorizationDialog/AuthorizationDialog';
 
+const Styles = {
+  table: {
+    padding: '1rem',
+    paddingRight: '7rem',
+    paddingLeft: '7rem',
+    paddingBottom: '0rem',
+  },
+};
+
 const StandingOrderTable = () => {
-  const [isLoading, setLoading] = useState(true);
   const [dataStandingOrders, setData] = useState<StandingOrder[]>([]);
-
-  const [openFormDialog, setOpenFormDialog] = useState(false);
   const [formData, setFormData] = useState<StandingOrder>({} as StandingOrder);
-
+  const [openFormDialog, setOpenFormDialog] = useState(false);
   const [openSymbolsDialog, setSymbolsDialog] = useState(false);
-
   const [openAuthorizationDialog, setAuthorizationDialog] = useState(false);
 
   const handleOpenSymbolDialog = () => {
@@ -76,7 +77,6 @@ const StandingOrderTable = () => {
       const response = await axios.get<StandingOrder[]>(STANDING_ORDER_URL);
       const data = response.data;
       setData(data);
-      setLoading(false);
     } catch (error) {}
   };
 
@@ -88,6 +88,7 @@ const StandingOrderTable = () => {
         );
         const response = axios.put<StandingOrder>(formUrl, standingOrder);
         return response.then((res) => {
+          console.log(res);
           getAllForms();
           handleClickCloseFormDialog();
         });
@@ -119,9 +120,7 @@ const StandingOrderTable = () => {
           getAllForms();
           handleClickCloseFormDialog();
         });
-      } catch (error) {
-        return null;
-      }
+      } catch (error) {}
     });
   };
 
@@ -145,7 +144,6 @@ const StandingOrderTable = () => {
     () => {}
   );
   const authorization = (callback: () => void) => {
-    debugger;
     setCallbackFunction(() => callback);
     handleOpenAuthorizationDialog();
   };
@@ -170,8 +168,8 @@ const StandingOrderTable = () => {
     getAllForms();
   }, []);
   return (
-    <div>
-      <Table className='table'>
+    <div style={Styles.table}>
+      <Table>
         <StandingOrderTableHeader handleClickOpen={handleClickOpenFormDialog} />
         <StandingOrderTableList
           standingOrderList={dataStandingOrders}

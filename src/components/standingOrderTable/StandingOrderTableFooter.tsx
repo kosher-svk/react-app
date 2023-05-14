@@ -2,9 +2,19 @@ import { useMemo } from 'react';
 
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import { TableFooter } from '@mui/material';
+import { Box, TableFooter } from '@mui/material';
 import { StandingOrder } from '../../interfaces/standingOrder.interface';
 import CurrencyFormatter from '../../utils/CurrencyFormatter';
+
+const Styles = {
+  container: {
+    backgroundColor: '#50A8C6',
+  },
+  summary: {
+    fontSize: '1.3rem',
+    color: 'white',
+  },
+};
 
 const StandingOrderTableFooter = (props: {
   standingOrderList: StandingOrder[];
@@ -25,10 +35,14 @@ const StandingOrderTableFooter = (props: {
   }, [standingOrderList]);
 
   return (
-    <TableFooter>
+    <TableFooter style={Styles.container}>
       <TableRow>
-        <TableCell>Pocet trvalych prikazov: {numberOfStandingOrders}</TableCell>
-        <TableCell colSpan={2}>Celkova suma: {totalMoney}</TableCell>
+        <TableCell sx={Styles.summary} colSpan={3}>
+          <Box display='flex' justifyContent='space-around'>
+            <div>Počet trvalých príkazov: {numberOfStandingOrders}</div>
+            <div>Celková suma: {totalMoney}</div>
+          </Box>
+        </TableCell>
       </TableRow>
     </TableFooter>
   );

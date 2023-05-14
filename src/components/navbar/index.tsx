@@ -1,8 +1,18 @@
+const Styles = {
+  backgroundColor: '#50A8C6',
+  color: 'white',
+  padding: '1rem',
+  paddingLeft: '5rem',
+};
+
 const Navbar = () => {
   return (
-    <div>
+    <div style={Styles}>
       <h1>Prehľad trvalých príkazov</h1>
-      <h3>Trvalé prikazy</h3>
+      <p>
+        Trvalé prikazy sú ideálne, keď potrebujete pravidelne posielať platby v
+        rovnakej výške. Tu ich môžete upravovať alebo vytvárať nové.
+      </p>
     </div>
   );
 };

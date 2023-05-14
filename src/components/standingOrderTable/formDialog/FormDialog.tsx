@@ -14,19 +14,29 @@ import { StandingOrder } from '../../../interfaces/standingOrder.interface';
 import { CodeTableContext } from '../../../App';
 import IntervalDropdown from './IntervalDropdown';
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  // border: '2px solid #000',
-  borderRadius: 1,
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
+const styles = {
+  title: { backgroundColor: '#50A8C6', color: 'white' },
+  actions: {
+    backgroundColor: '#50A8C6',
+    color: 'white',
+    paddingRight: '5rem',
+  },
+  constantSymbolBox: {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '40rem',
+    bgcolor: 'background.paper',
+    borderRadius: 1,
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+  },
+  button: {
+    margin: '1rem',
+  },
 };
 
 export default function FormDialog({
@@ -53,7 +63,7 @@ export default function FormDialog({
   };
   return (
     <Dialog open={openDialog} onClose={() => handleClose()} fullScreen={true}>
-      <DialogTitle>Trvalý príkaz</DialogTitle>
+      <DialogTitle style={styles.title}>Trvalý príkaz</DialogTitle>
       <DialogContent>
         <Formik
           initialValues={defaultFormData}
@@ -67,7 +77,7 @@ export default function FormDialog({
               props.values.constantSymbol ||
               (constSymbols && constSymbols[0] && constSymbols[0].value);
             return (
-              <Form>
+              <Form id='my-form-id'>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <TextField
@@ -124,7 +134,7 @@ export default function FormDialog({
                     <TextField
                       name='variableSymbol'
                       margin='dense'
-                      label='Variabilný symbol*'
+                      label='Variabilný symbol'
                       type='text'
                       onChange={props.handleChange}
                       value={props.values.variableSymbol}
@@ -144,7 +154,7 @@ export default function FormDialog({
                     <TextField
                       name='constantSymbol'
                       margin='dense'
-                      label='Konštantný symbol*'
+                      label='Konštantný symbol'
                       type='text'
                       onChange={props.handleChange}
                       value={props.values.constantSymbol}
@@ -174,7 +184,7 @@ export default function FormDialog({
                     <TextField
                       name='specificSymbol'
                       margin='dense'
-                      label='Špecifický symbol*'
+                      label='Špecifický symbol'
                       type='text'
                       onChange={props.handleChange}
                       value={props.values.specificSymbol}
@@ -188,7 +198,7 @@ export default function FormDialog({
                     <TextField
                       name='note'
                       margin='dense'
-                      label='Poznámka pre príjemcu*'
+                      label='Poznámka pre príjemcu'
                       type='text'
                       value={props.values.note}
                       fullWidth
@@ -224,26 +234,18 @@ export default function FormDialog({
                         props.setFieldValue('validFrom', value?.format());
                       }}
                       minDate={moment().add(1, 'days')}
+                      format='DD/MM/YYYY'
                     />
                   </Grid>
                 </Grid>
-                <Button type='submit' variant='contained'>
-                  submit
-                </Button>
-                <Button
-                  variant='contained'
-                  color='error'
-                  onClick={() => handleClose()}
-                >
-                  Zahodiť
-                </Button>
+
                 <Modal
                   open={openSymbolsDialog}
                   onClose={handleCloseSymbolDialog}
                   aria-labelledby='parent-modal-title'
                   aria-describedby='parent-modal-description'
                 >
-                  <Box sx={{ ...style, width: 600 }}>
+                  <Box sx={styles.constantSymbolBox}>
                     <Select
                       name='constantSymbol'
                       value={defaultConstantSymbol}
@@ -271,7 +273,24 @@ export default function FormDialog({
           }}
         </Formik>
       </DialogContent>
-      <DialogActions></DialogActions>
+      <DialogActions style={styles.actions}>
+        <Button
+          type='submit'
+          form='my-form-id'
+          variant='contained'
+          sx={styles.button}
+        >
+          Uložiť
+        </Button>
+        <Button
+          variant='contained'
+          color='error'
+          onClick={() => handleClose()}
+          sx={styles.button}
+        >
+          Zahodiť
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }

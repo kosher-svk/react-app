@@ -11,7 +11,7 @@ import { Interval } from './interfaces/interval.interface';
 import { ConstSymbol } from './interfaces/constSymbol.interface';
 import { CodeTables } from './interfaces/codeTables.interface';
 import { INTERVALS_URL, SYMBOLS_URL } from './constants';
-import { CircularProgress } from '@mui/material';
+import CircularIndeterminate from './components/lazyLoading/LazyLoad';
 
 export const CodeTableContext = createContext<CodeTables>({});
 
@@ -44,8 +44,6 @@ const App = () => {
   };
 
   const codeTables = useMemo(() => {
-    console.log('use memo working');
-
     return { intervals, constSymbols };
   }, [intervals, constSymbols]);
 
@@ -57,7 +55,7 @@ const App = () => {
   return (
     <div>
       <CodeTableContext.Provider value={codeTables}>
-        <Suspense fallback={<CircularProgress />}>
+        <Suspense fallback={<CircularIndeterminate />}>
           <NavbarLazy />
           <StandingOrderTableLazy />
         </Suspense>

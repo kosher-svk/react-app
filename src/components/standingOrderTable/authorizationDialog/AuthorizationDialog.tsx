@@ -107,7 +107,11 @@ const AuthorizationDialog = ({
                   >
                     OK
                   </Button>
-                  <Button onClick={closeDialog} variant='outlined'>
+                  <Button
+                    onClick={closeDialog}
+                    variant='contained'
+                    color='error'
+                  >
                     Zrušit
                   </Button>
                 </Box>

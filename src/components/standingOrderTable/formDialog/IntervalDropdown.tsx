@@ -19,12 +19,15 @@ const IntervalDropdown = ({ props }: { props: any }) => {
         <Select
           name='intervalSpecification'
           value={props.values.intervalSpecification || 1}
-          label='Periodicita'
           onChange={props.handleChange}
           style={{ display: 'block' }}
         >
           {daysInWeek.map((day, index) => {
-            return <MenuItem value={index + 1}>{day}</MenuItem>;
+            return (
+              <MenuItem key={index} value={index + 1}>
+                {day}
+              </MenuItem>
+            );
           })}
         </Select>
       );
@@ -36,12 +39,15 @@ const IntervalDropdown = ({ props }: { props: any }) => {
           value={
             props.values.intervalSpecification || moment().add(1, 'days').date()
           }
-          label='Periodicita'
           onChange={props.handleChange}
           style={{ display: 'block' }}
         >
           {daysInMonth.map((day, index) => {
-            return <MenuItem value={index + 1}>{index + 1 + '.'}</MenuItem>;
+            return (
+              <MenuItem key={index} value={index + 1}>
+                {index + 1 + '.'}
+              </MenuItem>
+            );
           })}
         </Select>
       );
