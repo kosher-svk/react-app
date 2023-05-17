@@ -11,7 +11,13 @@ const styles = {
     color: 'white',
   },
   button: {
-    backgroundColor: '#00c5ca',
+    backgroundColor: 'white',
+    color: '#00c5ca',
+    '&:hover': {
+      backgroundColor: 'white',
+      color: '#00c5ca',
+      opacity: 0.85,
+    },
   },
 };
 
@@ -26,7 +32,7 @@ const StandingOrderTableHeader = ({
         <TableCell colSpan={3} sx={styles.container}>
           <Button
             variant='contained'
-            style={styles.button}
+            sx={styles.button}
             onClick={() => handleClickOpen(0)}
           >
             Nový trvalý príkaz

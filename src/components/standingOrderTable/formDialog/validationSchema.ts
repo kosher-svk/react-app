@@ -22,8 +22,8 @@ const validationSchema = object({
       }
     ),
   amount: number()
-    .required('Please enter a valid account')
-    .moreThan(0, 'Musite zadat ciastku vacsiu ako 0'),
+    .required('Prosím vložte čiastku')
+    .moreThan(0, 'Prosím zadajte čiastku väčšiu ako 0'),
   variableSymbol: string().max(
     10,
     'Variabilny symbol moze obsahovat max 10 cislic'

@@ -2,8 +2,8 @@ import { StandingOrder } from '../interfaces/standingOrder.interface';
 
 const formDataNormalizer = (formData: StandingOrder): StandingOrder => {
   const normalizedStandingOrder = {
-    standingOrderId: formData?.standingOrderId || 0,
-    amount: formData?.amount || 0,
+    standingOrderId: formData?.standingOrderId,
+    amount: formData?.amount,
     name: formData?.name || '',
     accountNumber: formData?.accountNumber || '',
     variableSymbol: formData?.variableSymbol || '',

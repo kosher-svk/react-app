@@ -10,6 +10,8 @@ import { StandingOrder } from '../../interfaces/standingOrder.interface';
 import { GRID_CARD_VALIDATE_URL, STANDING_ORDER_URL } from '../../constants';
 import { Validation } from '../../interfaces/validation.interface';
 import AuthorizationDialog from './authorizationDialog/AuthorizationDialog';
+import { Alert, Snackbar } from '@mui/material';
+import { Severity, SnackbarMessage } from '../../interfaces/snackbarMessage';
 
 const Styles = {
   table: {
@@ -26,6 +28,9 @@ const StandingOrderTable = () => {
   const [openFormDialog, setOpenFormDialog] = useState(false);
   const [openSymbolsDialog, setSymbolsDialog] = useState(false);
   const [openAuthorizationDialog, setAuthorizationDialog] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<SnackbarMessage>({
+    state: false,
+  } as SnackbarMessage);
 
   const handleOpenSymbolDialog = () => {
     setSymbolsDialog(true);
@@ -41,6 +46,14 @@ const StandingOrderTable = () => {
 
   const handleCloseAuthorizationDialog = () => {
     setAuthorizationDialog(false);
+  };
+
+  const handleOpenSnackbar = (severity: Severity, message: string) => {
+    setSnackbarMessage({ state: true, severity: severity, message: message });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarMessage({ state: false });
   };
 
   const handleClickOpenFormDialog = async (id?: number) => {
@@ -72,27 +85,33 @@ const StandingOrderTable = () => {
     }
   };
 
-  const getAllForms = async () => {
-    try {
-      const response = await axios.get<StandingOrder[]>(STANDING_ORDER_URL);
-      const data = response.data;
-      setData(data);
-    } catch (error) {}
+  const getAllForms = () => {
+    const response = axios.get<StandingOrder[]>(STANDING_ORDER_URL);
+    return response
+      .then((res) => {
+        if (res.data) {
+          setData(res.data);
+        }
+      })
+      .catch((error) => {
+        handleOpenSnackbar(Severity.Error, error.message);
+      });
   };
 
   const updateForm = (standingOrder: StandingOrder) => {
     authorization(() => {
-      try {
-        const formUrl = STANDING_ORDER_URL.concat(
-          '/' + standingOrder.standingOrderId
-        );
-        const response = axios.put<StandingOrder>(formUrl, standingOrder);
-        return response.then((res) => {
-          console.log(res);
+      const formUrl = STANDING_ORDER_URL.concat(
+        '/' + standingOrder.standingOrderId
+      );
+      const response = axios.put<StandingOrder>(formUrl, standingOrder);
+      return response
+        .then((res) => {
           getAllForms();
           handleClickCloseFormDialog();
+        })
+        .catch((error) => {
+          handleOpenSnackbar(Severity.Error, error.message);
         });
-      } catch (error) {}
     });
   };
 
@@ -110,34 +129,38 @@ const StandingOrderTable = () => {
   const createForm = (standingOrder: StandingOrder) => {
     if (!standingOrder) return;
     authorization(() => {
-      try {
-        const normalizedForm = formDataNormalizer(standingOrder);
-        const response = axios.post<StandingOrder>(
-          STANDING_ORDER_URL,
-          normalizedForm
-        );
-        return response.then((res) => {
+      const normalizedForm = formDataNormalizer(standingOrder);
+      const response = axios.post<StandingOrder>(
+        STANDING_ORDER_URL,
+        normalizedForm
+      );
+      return response
+        .then((res) => {
+          getAllForms();
+          handleClickCloseFormDialog();
+        })
+        .catch((error) => {
+          handleOpenSnackbar(Severity.Error, error.message);
           getAllForms();
           handleClickCloseFormDialog();
         });
-      } catch (error) {}
     });
   };
 
   const deleteForm = (standingOrderId?: number) => {
     if (!standingOrderId) return;
     authorization(() => {
-      try {
-        const formUrl = STANDING_ORDER_URL.concat('/' + standingOrderId);
-        const response = axios.delete(formUrl);
-        response.then((res) => {
+      const formUrl = STANDING_ORDER_URL.concat('/' + standingOrderId);
+      const response = axios.delete(formUrl);
+      response
+        .then((res) => {
           if (res.status === 200) {
             getAllForms();
           }
+        })
+        .catch((error) => {
+          handleOpenSnackbar(Severity.Error, error.message);
         });
-      } catch (error) {
-        console.log(error);
-      }
     });
   };
   const [callbackFunction, setCallbackFunction] = useState<() => void>(
@@ -193,6 +216,16 @@ const StandingOrderTable = () => {
         handleSubmitAuthorization={handleSubmitAuthorization}
         callbackFunction={callbackFunction}
       />
+
+      <Snackbar
+        open={snackbarMessage.state}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity={snackbarMessage.severity}>
+          {snackbarMessage.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

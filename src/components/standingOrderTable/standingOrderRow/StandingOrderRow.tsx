@@ -22,12 +22,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
   '&:hover button': {
     display: 'inline-block',
-    // borderColor: '#dedede',
-    // transition: 'color 1s ease-in-out',
+    borderColor: '#dedede',
+    transition: 'color 1s ease-in-out',
   },
-  // '& button': {
-  //   backgroundColor: '#ffffff',
-  // },
+  '& button': {
+    backgroundColor: '#ffffff',
+  },
   maxHeight: '5rem',
 }));
 const styles = {
@@ -56,14 +56,10 @@ const styles = {
     justifyContent: 'flex-start',
   },
   updateButton: {
-    // color: '#00c5ca',
-    // borderColor: '#dedede',
     marginRight: '0.5rem',
     display: 'none',
   },
   deleteButton: {
-    // color: 'error',
-    // borderColor: '#dedede',
     marginRight: '0.5rem',
     display: 'none',
   },
@@ -102,14 +98,14 @@ const StandingOrderRow = ({
           </Grid>
           <Grid item xs={4} sx={styles.buttonContainer}>
             <Button
-              variant='contained'
+              variant='outlined'
               sx={styles.updateButton}
               onClick={() => handleClickOpen(normalizedForm.standingOrderId)}
             >
               Upraviť
             </Button>
             <Button
-              variant='contained'
+              variant='outlined'
               color='error'
               sx={styles.deleteButton}
               onClick={() => handleClickDelete(normalizedForm.standingOrderId)}

@@ -15,7 +15,7 @@ import { CodeTableContext } from '../../../App';
 import IntervalDropdown from './IntervalDropdown';
 
 const styles = {
-  title: { backgroundColor: '#50A8C6', color: 'white' },
+  title: { padding: '1.7rem', backgroundColor: '#50A8C6', color: 'white' },
   actions: {
     backgroundColor: '#50A8C6',
     color: 'white',
@@ -34,8 +34,19 @@ const styles = {
     px: 4,
     pb: 3,
   },
-  button: {
+  acceptButton: {
     margin: '1rem',
+    '&:hover': {
+      opacity: 0.95,
+    },
+  },
+  cancelButton: {
+    backgroundColor: 'white',
+    margin: '1rem',
+    '&:hover': {
+      backgroundColor: 'white',
+      opacity: 0.85,
+    },
   },
 };
 
@@ -60,6 +71,9 @@ export default function FormDialog({
   const defaultFormData = {
     ...formData,
     validFrom: formData.validFrom || moment().add(1, 'days'),
+    constantSymbol:
+      formData.constantSymbol ||
+      (constSymbols && constSymbols[0] && constSymbols[0].value),
   };
   return (
     <Dialog open={openDialog} onClose={() => handleClose()} fullScreen={true}>
@@ -68,14 +82,11 @@ export default function FormDialog({
         <Formik
           initialValues={defaultFormData}
           onSubmit={(values, actions) => {
-            handleFormSubmit({ ...values });
+            handleFormSubmit({ ...values, amount: values.amount || 0 });
           }}
           validationSchema={validationSchema}
         >
           {(props) => {
-            const defaultConstantSymbol =
-              props.values.constantSymbol ||
-              (constSymbols && constSymbols[0] && constSymbols[0].value);
             return (
               <Form id='my-form-id'>
                 <Grid container spacing={2}>
@@ -118,7 +129,7 @@ export default function FormDialog({
                     <TextField
                       name='amount'
                       margin='dense'
-                      label='Čiastka'
+                      label='Čiastka*'
                       type='number'
                       value={props.values.amount}
                       onChange={props.handleChange}
@@ -248,7 +259,7 @@ export default function FormDialog({
                   <Box sx={styles.constantSymbolBox}>
                     <Select
                       name='constantSymbol'
-                      value={defaultConstantSymbol}
+                      value={props.values.constantSymbol}
                       label='Konštantný symbol'
                       onChange={(e) => {
                         props.handleChange(e);
@@ -278,15 +289,16 @@ export default function FormDialog({
           type='submit'
           form='my-form-id'
           variant='contained'
-          sx={styles.button}
+          color='warning'
+          sx={styles.acceptButton}
         >
           Uložiť
         </Button>
         <Button
-          variant='contained'
+          variant='outlined'
           color='error'
           onClick={() => handleClose()}
-          sx={styles.button}
+          sx={styles.cancelButton}
         >
           Zahodiť
         </Button>

@@ -39,7 +39,6 @@ const AuthorizationDialog = ({
     getGridCardCoordinates();
   }, []);
 
-  console.log(callbackFunction);
   const [authorizationData, setAuthorizationData] = useState<Validation>({});
   const gridCardCoordinates = authorizationData.coordinate;
   const getGridCardCoordinates = async () => {
@@ -68,7 +67,7 @@ const AuthorizationDialog = ({
             {String(gridCardCoordinates)[1]}
           </p>
           <Formik
-            initialValues={{ PINcode: 0 }}
+            initialValues={{ PINcode: undefined }}
             onSubmit={(values) => {
               const updatedAuthorizationData = { ...authorizationData };
               updatedAuthorizationData.pin = values.PINcode;
@@ -102,14 +101,14 @@ const AuthorizationDialog = ({
                 >
                   <Button
                     type='submit'
-                    variant='contained'
+                    variant='outlined'
                     sx={{ marginRight: '1rem' }}
                   >
                     OK
                   </Button>
                   <Button
                     onClick={closeDialog}
-                    variant='contained'
+                    variant='outlined'
                     color='error'
                   >
                     Zrušit
