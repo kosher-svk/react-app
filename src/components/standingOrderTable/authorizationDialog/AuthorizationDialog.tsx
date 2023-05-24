@@ -6,19 +6,34 @@ import { Validation } from '../../../interfaces/validation.interface';
 import { GRID_CARD_INIT_URL } from '../../../constants';
 import axios from 'axios';
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  // border: '2px solid #000',
-  borderRadius: 1,
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
+const styles = {
+  box: {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    borderRadius: 1,
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+  },
+  acceptButton: {
+    margin: '1rem',
+    '&:hover': {
+      opacity: 0.95,
+    },
+  },
+  cancelButton: {
+    backgroundColor: 'white',
+    margin: '1rem',
+    '&:hover': {
+      backgroundColor: 'white',
+      opacity: 0.85,
+    },
+  },
 };
 
 const AuthorizationDialog = ({
@@ -60,7 +75,7 @@ const AuthorizationDialog = ({
       aria-labelledby='modal-modal-title'
       aria-describedby='modal-modal-description'
     >
-      <Box sx={style}>
+      <Box sx={styles.box}>
         <div>
           <p>
             Zadajte PIN kód z riadku {String(gridCardCoordinates)[0]} a stĺpca{' '}
@@ -101,8 +116,9 @@ const AuthorizationDialog = ({
                 >
                   <Button
                     type='submit'
-                    variant='outlined'
-                    sx={{ marginRight: '1rem' }}
+                    variant='contained'
+                    color='warning'
+                    sx={styles.acceptButton}
                   >
                     OK
                   </Button>
@@ -110,6 +126,7 @@ const AuthorizationDialog = ({
                     onClick={closeDialog}
                     variant='outlined'
                     color='error'
+                    sx={styles.cancelButton}
                   >
                     Zrušit
                   </Button>
