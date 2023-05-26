@@ -14,6 +14,9 @@ const IntervalDropdown = ({ props }: { props: any }) => {
   const daysInMonth = Array(31).fill('d');
 
   switch (props.values.intervalId) {
+    case 1:
+      props.values.intervalSpecification = 0;
+      return <></>;
     case 2:
       return (
         <Select
