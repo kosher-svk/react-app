@@ -9,27 +9,26 @@ import moment from 'moment';
 import { StandingOrder } from '../../../interfaces/standingOrder.interface';
 import formDataNormalizer from '../../../utils/FormDataNormalizer';
 import CurrencyFormatter from '../../../utils/CurrencyFormatter';
+import { COLORS } from '../../../constants/colors';
+// import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+// import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: '#fafafa',
+    backgroundColor: COLORS.analogous,
   },
   '&:nth-of-type(even)': {
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.analogousBlank,
   },
   '&:hover': {
-    backgroundColor: '#e3f6fd',
+    backgroundColor: COLORS.secondaryBlank,
   },
   '&:hover button': {
     display: 'inline-block',
-    borderColor: '#dedede',
-    transition: 'color 1s ease-in-out',
-  },
-  '& button': {
-    backgroundColor: '#ffffff',
   },
   maxHeight: '5rem',
 }));
+
 const styles = {
   date: {
     textAlign: 'center',
@@ -58,10 +57,24 @@ const styles = {
   updateButton: {
     marginRight: '0.5rem',
     display: 'none',
+    backgroundColor: COLORS.primary,
+    color: 'white',
+    '&:hover': {
+      backgroundColor: COLORS.primaryBlank,
+      color: 'white',
+    },
   },
+
   deleteButton: {
     marginRight: '0.5rem',
     display: 'none',
+    backgroundColor: 'white',
+    borderColor: COLORS.alertColor,
+    color: '#ed020e',
+    '&:hover': {
+      backgroundColor: COLORS.alertColorBlank,
+      color: COLORS.alertColorDark,
+    },
   },
 };
 
@@ -98,17 +111,19 @@ const StandingOrderRow = ({
           </Grid>
           <Grid item xs={4} sx={styles.buttonContainer}>
             <Button
-              variant='outlined'
+              variant='contained'
               sx={styles.updateButton}
               onClick={() => handleClickOpen(normalizedForm.standingOrderId)}
+              // startIcon={<EditOutlinedIcon />}
             >
               Upraviť
             </Button>
             <Button
-              variant='outlined'
+              variant='contained'
               color='error'
               sx={styles.deleteButton}
               onClick={() => handleClickDelete(normalizedForm.standingOrderId)}
+              // startIcon={<EditOutlinedIcon />}
             >
               Zmazať
             </Button>
