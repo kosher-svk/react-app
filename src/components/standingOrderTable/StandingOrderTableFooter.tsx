@@ -5,14 +5,15 @@ import TableRow from '@mui/material/TableRow';
 import { Box, TableFooter } from '@mui/material';
 import { StandingOrder } from '../../interfaces/standingOrder.interface';
 import CurrencyFormatter from '../../utils/CurrencyFormatter';
+import { COLORS } from '../../constants/colors';
 
 const Styles = {
   container: {
-    backgroundColor: '#50A8C6',
+    backgroundColor: COLORS.secondary,
   },
   summary: {
     fontSize: '1.3rem',
-    color: 'white',
+    color: COLORS.text,
   },
 };
 

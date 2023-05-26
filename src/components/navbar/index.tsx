@@ -1,6 +1,8 @@
+import { COLORS } from '../../constants/colors';
+
 const Styles = {
-  backgroundColor: '#50A8C6',
-  color: 'white',
+  backgroundColor: COLORS.secondary,
+  color: COLORS.text,
   padding: '1rem',
   paddingLeft: '5rem',
 };

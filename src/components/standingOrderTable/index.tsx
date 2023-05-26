@@ -7,7 +7,10 @@ import axios from 'axios';
 import Table from '@mui/material/Table';
 import formDataNormalizer from '../../utils/FormDataNormalizer';
 import { StandingOrder } from '../../interfaces/standingOrder.interface';
-import { GRID_CARD_VALIDATE_URL, STANDING_ORDER_URL } from '../../constants';
+import {
+  GRID_CARD_VALIDATE_URL,
+  STANDING_ORDER_URL,
+} from '../../constants/url';
 import { Validation } from '../../interfaces/validation.interface';
 import AuthorizationDialog from './authorizationDialog/AuthorizationDialog';
 import { Alert, Snackbar } from '@mui/material';
