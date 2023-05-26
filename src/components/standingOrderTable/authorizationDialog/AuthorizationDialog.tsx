@@ -3,8 +3,11 @@ import { Form, Formik } from 'formik';
 import validationSchema from '../formDialog/validationSchemaPINcode';
 import { useEffect, useState } from 'react';
 import { Validation } from '../../../interfaces/validation.interface';
-import { GRID_CARD_INIT_URL } from '../../../constants';
+import { GRID_CARD_INIT_URL } from '../../../constants/url';
+import DoneIcon from '@mui/icons-material/Done';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import axios from 'axios';
+import { COLORS } from '../../../constants/colors';
 
 const styles = {
   box: {
@@ -19,6 +22,7 @@ const styles = {
     pt: 2,
     px: 4,
     pb: 3,
+    backgroundColor: COLORS.analogous,
   },
   acceptButton: {
     margin: '1rem',
@@ -51,8 +55,10 @@ const AuthorizationDialog = ({
   callbackFunction: () => void;
 }) => {
   useEffect(() => {
-    getGridCardCoordinates();
-  }, []);
+    if (openDialog) {
+      getGridCardCoordinates();
+    }
+  }, [openDialog]);
 
   const [authorizationData, setAuthorizationData] = useState<Validation>({});
   const gridCardCoordinates = authorizationData.coordinate;
@@ -86,7 +92,6 @@ const AuthorizationDialog = ({
             onSubmit={(values) => {
               const updatedAuthorizationData = { ...authorizationData };
               updatedAuthorizationData.pin = values.PINcode;
-              console.log('updatedAuthorizationData', updatedAuthorizationData);
               handleSubmitAuthorization(
                 updatedAuthorizationData,
                 callbackFunction
@@ -119,14 +124,16 @@ const AuthorizationDialog = ({
                     variant='contained'
                     color='warning'
                     sx={styles.acceptButton}
+                    startIcon={<DoneIcon />}
                   >
-                    OK
+                    Potvrdiť
                   </Button>
                   <Button
                     onClick={closeDialog}
                     variant='outlined'
                     color='error'
                     sx={styles.cancelButton}
+                    startIcon={<CancelOutlinedIcon />}
                   >
                     Zrušit
                   </Button>
