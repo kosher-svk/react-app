@@ -2,16 +2,24 @@ import Button from '@mui/material/Button';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { COLORS } from '../../constants/colors';
+import AddIcon from '@mui/icons-material/Add';
 
 const styles = {
   container: {
     textAlign: 'right',
     padding: '1rem',
-    backgroundColor: '#50A8C6',
-    color: 'white',
+    backgroundColor: COLORS.secondary,
   },
   button: {
-    backgroundColor: '#00c5ca',
+    backgroundColor: COLORS.triadicBlank,
+    //#00c5ca'
+    color: COLORS.triadicDark,
+    '&:hover': {
+      backgroundColor: COLORS.triadic,
+      color: COLORS.triadicDark,
+      opacity: 0.95,
+    },
   },
 };
 
@@ -26,8 +34,9 @@ const StandingOrderTableHeader = ({
         <TableCell colSpan={3} sx={styles.container}>
           <Button
             variant='contained'
-            style={styles.button}
+            sx={styles.button}
             onClick={() => handleClickOpen(0)}
+            startIcon={<AddIcon />}
           >
             Nový trvalý príkaz
           </Button>

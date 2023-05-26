@@ -3,22 +3,41 @@ import { Form, Formik } from 'formik';
 import validationSchema from '../formDialog/validationSchemaPINcode';
 import { useEffect, useState } from 'react';
 import { Validation } from '../../../interfaces/validation.interface';
-import { GRID_CARD_INIT_URL } from '../../../constants';
+import { GRID_CARD_INIT_URL } from '../../../constants/url';
+import DoneIcon from '@mui/icons-material/Done';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import axios from 'axios';
+import { COLORS } from '../../../constants/colors';
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  // border: '2px solid #000',
-  borderRadius: 1,
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
+const styles = {
+  box: {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    borderRadius: 1,
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+    backgroundColor: COLORS.analogous,
+  },
+  acceptButton: {
+    margin: '1rem',
+    '&:hover': {
+      opacity: 0.95,
+    },
+  },
+  cancelButton: {
+    backgroundColor: 'white',
+    margin: '1rem',
+    '&:hover': {
+      backgroundColor: 'white',
+      opacity: 0.85,
+    },
+  },
 };
 
 const AuthorizationDialog = ({
@@ -36,10 +55,11 @@ const AuthorizationDialog = ({
   callbackFunction: () => void;
 }) => {
   useEffect(() => {
-    getGridCardCoordinates();
-  }, []);
+    if (openDialog) {
+      getGridCardCoordinates();
+    }
+  }, [openDialog]);
 
-  console.log(callbackFunction);
   const [authorizationData, setAuthorizationData] = useState<Validation>({});
   const gridCardCoordinates = authorizationData.coordinate;
   const getGridCardCoordinates = async () => {
@@ -61,18 +81,17 @@ const AuthorizationDialog = ({
       aria-labelledby='modal-modal-title'
       aria-describedby='modal-modal-description'
     >
-      <Box sx={style}>
+      <Box sx={styles.box}>
         <div>
           <p>
             Zadajte PIN kód z riadku {String(gridCardCoordinates)[0]} a stĺpca{' '}
             {String(gridCardCoordinates)[1]}
           </p>
           <Formik
-            initialValues={{ PINcode: 0 }}
+            initialValues={{ PINcode: undefined }}
             onSubmit={(values) => {
               const updatedAuthorizationData = { ...authorizationData };
               updatedAuthorizationData.pin = values.PINcode;
-              console.log('updatedAuthorizationData', updatedAuthorizationData);
               handleSubmitAuthorization(
                 updatedAuthorizationData,
                 callbackFunction
@@ -103,14 +122,18 @@ const AuthorizationDialog = ({
                   <Button
                     type='submit'
                     variant='contained'
-                    sx={{ marginRight: '1rem' }}
+                    color='warning'
+                    sx={styles.acceptButton}
+                    startIcon={<DoneIcon />}
                   >
-                    OK
+                    Potvrdiť
                   </Button>
                   <Button
                     onClick={closeDialog}
-                    variant='contained'
+                    variant='outlined'
                     color='error'
+                    sx={styles.cancelButton}
+                    startIcon={<CancelOutlinedIcon />}
                   >
                     Zrušit
                   </Button>

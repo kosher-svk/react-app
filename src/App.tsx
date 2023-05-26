@@ -10,7 +10,7 @@ import axios from 'axios';
 import { Interval } from './interfaces/interval.interface';
 import { ConstSymbol } from './interfaces/constSymbol.interface';
 import { CodeTables } from './interfaces/codeTables.interface';
-import { INTERVALS_URL, SYMBOLS_URL } from './constants';
+import { INTERVALS_URL, SYMBOLS_URL } from './constants/url';
 import CircularIndeterminate from './components/lazyLoading/LazyLoad';
 
 export const CodeTableContext = createContext<CodeTables>({});

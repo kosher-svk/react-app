@@ -6,19 +6,27 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { DatePicker } from '@mui/x-date-pickers';
-import { Box, Grid, MenuItem, Modal, Select } from '@mui/material';
+import { Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import validationSchema from './validationSchema';
 import moment from 'moment';
 import { useContext } from 'react';
 import { StandingOrder } from '../../../interfaces/standingOrder.interface';
 import { CodeTableContext } from '../../../App';
 import IntervalDropdown from './IntervalDropdown';
+import SymbolDialog from './SymbolDialog';
+import { COLORS } from '../../../constants/colors';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+
+import DoneIcon from '@mui/icons-material/Done';
 
 const styles = {
-  title: { backgroundColor: '#50A8C6', color: 'white' },
+  title: {
+    padding: '1.7rem',
+    backgroundColor: COLORS.secondary,
+    color: COLORS.text,
+  },
   actions: {
-    backgroundColor: '#50A8C6',
-    color: 'white',
+    backgroundColor: COLORS.secondary,
     paddingRight: '5rem',
   },
   constantSymbolBox: {
@@ -34,8 +42,19 @@ const styles = {
     px: 4,
     pb: 3,
   },
-  button: {
+  acceptButton: {
     margin: '1rem',
+    '&:hover': {
+      opacity: 0.95,
+    },
+  },
+  cancelButton: {
+    backgroundColor: 'white',
+    margin: '1rem',
+    '&:hover': {
+      backgroundColor: 'white',
+      opacity: 0.85,
+    },
   },
 };
 
@@ -60,6 +79,8 @@ export default function FormDialog({
   const defaultFormData = {
     ...formData,
     validFrom: formData.validFrom || moment().add(1, 'days'),
+    constantSymbol: formData.constantSymbol,
+    intervalSpecification: formData.intervalSpecification || 0,
   };
   return (
     <Dialog open={openDialog} onClose={() => handleClose()} fullScreen={true}>
@@ -68,14 +89,11 @@ export default function FormDialog({
         <Formik
           initialValues={defaultFormData}
           onSubmit={(values, actions) => {
-            handleFormSubmit({ ...values });
+            handleFormSubmit({ ...values, amount: values.amount || 0 });
           }}
           validationSchema={validationSchema}
         >
           {(props) => {
-            const defaultConstantSymbol =
-              props.values.constantSymbol ||
-              (constSymbols && constSymbols[0] && constSymbols[0].value);
             return (
               <Form id='my-form-id'>
                 <Grid container spacing={2}>
@@ -118,7 +136,7 @@ export default function FormDialog({
                     <TextField
                       name='amount'
                       margin='dense'
-                      label='Čiastka'
+                      label='Čiastka*'
                       type='number'
                       value={props.values.amount}
                       onChange={props.handleChange}
@@ -238,36 +256,16 @@ export default function FormDialog({
                     />
                   </Grid>
                 </Grid>
-
-                <Modal
-                  open={openSymbolsDialog}
-                  onClose={handleCloseSymbolDialog}
-                  aria-labelledby='parent-modal-title'
-                  aria-describedby='parent-modal-description'
-                >
-                  <Box sx={styles.constantSymbolBox}>
-                    <Select
-                      name='constantSymbol'
-                      value={defaultConstantSymbol}
-                      label='Konštantný symbol'
-                      onChange={(e) => {
-                        props.handleChange(e);
-                        handleCloseSymbolDialog();
-                      }}
-                      style={{ display: 'block' }}
-                    >
-                      {constSymbols
-                        ? constSymbols.map((constSymbol, index) => {
-                            return (
-                              <MenuItem key={index} value={constSymbol.value}>
-                                {`[${constSymbol.value}] ${constSymbol.text}`}
-                              </MenuItem>
-                            );
-                          })
-                        : null}
-                    </Select>
-                  </Box>
-                </Modal>
+                <SymbolDialog
+                  openSymbolsDialog={openSymbolsDialog}
+                  handleCloseSymbolDialog={handleCloseSymbolDialog}
+                  constSymbols={constSymbols}
+                  values={props.values.constantSymbol}
+                  //(constSymbols && constSymbols[0] && constSymbols[0].value)
+                  handleChange={(e: SelectChangeEvent<string>) => {
+                    props.handleChange(e);
+                  }}
+                />
               </Form>
             );
           }}
@@ -278,17 +276,20 @@ export default function FormDialog({
           type='submit'
           form='my-form-id'
           variant='contained'
-          sx={styles.button}
+          color='warning'
+          sx={styles.acceptButton}
+          startIcon={<DoneIcon />}
         >
           Uložiť
         </Button>
         <Button
-          variant='contained'
+          variant='outlined'
           color='error'
           onClick={() => handleClose()}
-          sx={styles.button}
+          sx={styles.cancelButton}
+          startIcon={<CancelOutlinedIcon />}
         >
-          Zahodiť
+          Zrušiť
         </Button>
       </DialogActions>
     </Dialog>

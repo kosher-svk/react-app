@@ -1,9 +1,9 @@
 import { StandingOrder } from '../interfaces/standingOrder.interface';
 
-const formDataNormalizer = (formData: StandingOrder): StandingOrder => {
+const formDataNormalizer = (formData?: StandingOrder): StandingOrder => {
   const normalizedStandingOrder = {
-    standingOrderId: formData?.standingOrderId || 0,
-    amount: formData?.amount || 0,
+    standingOrderId: formData?.standingOrderId,
+    amount: formData?.amount,
     name: formData?.name || '',
     accountNumber: formData?.accountNumber || '',
     variableSymbol: formData?.variableSymbol || '',
@@ -12,7 +12,7 @@ const formDataNormalizer = (formData: StandingOrder): StandingOrder => {
     interval: formData?.interval || '',
     note: formData?.note || '',
     intervalId: formData?.intervalId || 1,
-    intervalSpecification: formData?.intervalSpecification || 1,
+    intervalSpecification: formData?.intervalSpecification,
     validFrom: formData?.validFrom || '',
     nextRealizationDate: formData?.nextRealizationDate || '',
   };
