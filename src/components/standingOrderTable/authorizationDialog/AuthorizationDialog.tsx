@@ -111,6 +111,7 @@ const AuthorizationDialog = ({
                   type='number'
                   value={values.PINcode}
                   onChange={handleChange}
+                  sx={{ display: 'flex' }}
                 />
                 <Box
                   sx={{

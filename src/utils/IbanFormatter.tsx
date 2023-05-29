@@ -1,9 +1,13 @@
 const ibanFormatter = (iban?: string) => {
-  if (!iban) {
+  if (typeof iban !== 'string') {
+    return;
+  }
+  iban = iban.replace(/\s/g, '');
+  if (iban.length !== 24) {
     return iban;
   }
   iban = iban.toUpperCase();
-  iban = iban.replace(/ /g, '');
+
   let newIban = '';
   let fourDigit = 0;
   for (let index = iban.length; index > 0; index--) {

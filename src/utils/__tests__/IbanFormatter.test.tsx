@@ -17,5 +17,14 @@ describe('ibanFormatter', () => {
 
     // Test s neplatným IBAN (undefined)
     expect(ibanFormatter()).toBeUndefined();
+    expect(ibanFormatter(5)).toBeUndefined();
+    expect(ibanFormatter(null)).toBeUndefined();
+    expect(ibanFormatter([])).toBeUndefined();
+    expect(ibanFormatter({})).toBeUndefined();
+    expect(ibanFormatter('12žžž')).toBe('12žžž');
+    expect(ibanFormatter('\n\n\n')).toBe('');
+    expect(ibanFormatter('1234561234567891234567891234567890')).toBe(
+      '1234561234567891234567891234567890'
+    );
   });
 });
