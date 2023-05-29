@@ -223,21 +223,21 @@ export default function FormDialog({
                       variant='standard'
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     <Select
                       name='intervalId'
                       value={props.values.intervalId || 1}
                       label='Periodicita*'
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
-                      style={{ display: 'block' }}
+                      fullWidth
                     >
                       <MenuItem value={1}>Denne</MenuItem>
                       <MenuItem value={2}>Týždenne</MenuItem>
                       <MenuItem value={3}>Mesačne</MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={10}>
+                  <Grid item xs={8}>
                     <IntervalDropdown props={props}></IntervalDropdown>
                   </Grid>
                   <Grid item xs={12}>
@@ -261,10 +261,7 @@ export default function FormDialog({
                   handleCloseSymbolDialog={handleCloseSymbolDialog}
                   constSymbols={constSymbols}
                   values={props.values.constantSymbol}
-                  //(constSymbols && constSymbols[0] && constSymbols[0].value)
-                  handleChange={(e: SelectChangeEvent<string>) => {
-                    props.handleChange(e);
-                  }}
+                  handleChange={props.handleChange}
                 />
               </Form>
             );

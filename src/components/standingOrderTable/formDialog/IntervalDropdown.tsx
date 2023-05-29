@@ -12,16 +12,19 @@ const IntervalDropdown = ({ props }: { props: any }) => {
     'Nedeľa',
   ];
   const daysInMonth = Array(31).fill('d');
-
+  let initialValue = props.values.intervalSpecification;
   switch (props.values.intervalId) {
     case 1:
       props.values.intervalSpecification = 0;
       return <></>;
     case 2:
+      if (!initialValue || initialValue < 1 || initialValue > 7) {
+        props.values.intervalSpecification = 1;
+      }
       return (
         <Select
           name='intervalSpecification'
-          value={props.values.intervalSpecification || 1}
+          value={props.values.intervalSpecification}
           onChange={props.handleChange}
           style={{ display: 'block' }}
         >
@@ -36,14 +39,15 @@ const IntervalDropdown = ({ props }: { props: any }) => {
       );
 
     case 3:
+      if (!initialValue || initialValue < 1 || initialValue > 31) {
+        props.values.intervalSpecification = moment().add(1, 'days').date();
+      }
       return (
         <Select
           name='intervalSpecification'
-          value={
-            props.values.intervalSpecification || moment().add(1, 'days').date()
-          }
+          value={props.values.intervalSpecification}
           onChange={props.handleChange}
-          style={{ display: 'block' }}
+          fullWidth
         >
           {daysInMonth.map((day, index) => {
             return (
